@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs>
+  <radialGradient id="bgGrad" cx="50%" cy="42%" r="75%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F1F1"/>
+  </radialGradient>
+  <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#FFC59A"/>
+  </linearGradient>
+  <linearGradient id="discStrong" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".55" stop-color="#F26B1D"/><stop offset="1" stop-color="#7A2E0B"/>
+  </linearGradient>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F2CF5B"/><stop offset=".5" stop-color="#D4A017"/><stop offset="1" stop-color="#9C7410"/>
+  </linearGradient>
+  <linearGradient id="wall1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".45" stop-color="#F26B1D"/><stop offset="1" stop-color="#1A0A03"/>
+  </linearGradient>
+  <linearGradient id="wall2" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E0E10"/><stop offset=".6" stop-color="#3A2A10"/><stop offset="1" stop-color="#D4A017"/>
+  </linearGradient>
+  <linearGradient id="wall3" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B2F6B"/><stop offset=".5" stop-color="#7B3FA0"/><stop offset="1" stop-color="#F26B1D"/>
+  </linearGradient>
+  <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset=".6" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".22"/>
+  </filter>
+  <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".18"/>
+  </filter>
+
+</defs>
+<rect width="800" height="800" fill="url(#bgGrad)"/>
+  <circle cx="400.0" cy="376.0" r="288.0" fill="url(#discGrad)"/>
+  <circle cx="664.96" cy="102.40000000000003" r="25.919999999999998" fill="#F26B1D" opacity=".9"/>
+  <circle cx="106.24000000000001" cy="217.6" r="14.4" fill="#D4A017"/>
+  <circle cx="184.0" cy="649.5999999999999" r="10.080000000000002" fill="#111111"/>
+  <ellipse cx="400.0" cy="704.0" rx="224.00000000000003" ry="20.0" fill="#000" opacity=".07"/><g transform="translate(270,150) rotate(-8,130.0,240.0)" filter="url(#shadow)"><rect width="260" height="480" rx="36.400000000000006" fill="#1B1B1D"/><rect x="10.4" y="10.4" width="239.20000000000002" height="459.2" rx="28.6" fill="#FFF" opacity=".05"/><rect width="260" height="480" rx="36.400000000000006" fill="url(#glassSheen)" opacity=".6"/><text x="130.0" y="201.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="52.0" fill="#FFF">20000</text><text x="130.0" y="240.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="600" font-size="20.8" fill="#F2CF5B" letter-spacing="3">mAh · 22.5W</text><circle cx="83.2" cy="316.8" r="7.8" fill="#F26B1D"/><circle cx="114.4" cy="316.8" r="7.8" fill="#F26B1D"/><circle cx="145.60000000000002" cy="316.8" r="7.8" fill="#F26B1D"/><circle cx="176.79999999999998" cy="316.8" r="7.8" fill="#444"/><rect x="52.0" y="384.0" width="156.0" height="19.2" rx="4" fill="url(#discStrong)"/></g>
+</svg>

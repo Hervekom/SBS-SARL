@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-orange: #F26B1D;
+    --color-gold: #D4A017;
+    --color-gold-dark: #C2410C;
+    --color-gold-light: #FFE4CC;
+    --color-noir: #111111;
+    --color-creme: #FFFFFF;
+    --color-beige: #F6F6F6;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #FFFFFF;
+    color: #111111;
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar for refined luxury feel */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F6F6F6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #F26B1D;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #C2410C;
+  }
+}
+
+.text-gold {
+  color: #F26B1D;
+}
+.text-gold-dark {
+  color: #C2410C;
+}
+.bg-gold {
+  background-color: #F26B1D;
+}
+.bg-gold-dark {
+  background-color: #C2410C;
+}
+.border-gold {
+  border-color: #F26B1D;
+}
+.border-gold-dark {
+  border-color: #C2410C;
+}
+.bg-creme {
+  background-color: #FFFFFF;
+}
+.bg-beige-light {
+  background-color: #F6F6F6;
+}
+
+/* Fluid Hero Keyframes */
+@keyframes heroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-hero-label {
+  animation: heroFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-hero-title {
+  animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.animate-hero-subtitle {
+  animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
+}
+
+.animate-hero-buttons {
+  animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both;
+}
+
+.animate-hero-image {
+  animation: heroFadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}

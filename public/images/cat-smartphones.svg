@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+  <radialGradient id="bgGrad" cx="50%" cy="42%" r="75%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F1F1"/>
+  </radialGradient>
+  <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#FFC59A"/>
+  </linearGradient>
+  <linearGradient id="discStrong" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".55" stop-color="#F26B1D"/><stop offset="1" stop-color="#7A2E0B"/>
+  </linearGradient>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F2CF5B"/><stop offset=".5" stop-color="#D4A017"/><stop offset="1" stop-color="#9C7410"/>
+  </linearGradient>
+  <linearGradient id="wall1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".45" stop-color="#F26B1D"/><stop offset="1" stop-color="#1A0A03"/>
+  </linearGradient>
+  <linearGradient id="wall2" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E0E10"/><stop offset=".6" stop-color="#3A2A10"/><stop offset="1" stop-color="#D4A017"/>
+  </linearGradient>
+  <linearGradient id="wall3" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B2F6B"/><stop offset=".5" stop-color="#7B3FA0"/><stop offset="1" stop-color="#F26B1D"/>
+  </linearGradient>
+  <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset=".6" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".22"/>
+  </filter>
+  <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".18"/>
+  </filter>
+
+</defs>
+<rect width="1200" height="900" fill="url(#bgGrad)"/>
+  <circle cx="600.0" cy="423.0" r="330" fill="url(#discGrad)"/>
+  <circle cx="903.6" cy="109.5" r="29.7" fill="#F26B1D" opacity=".9"/>
+  <circle cx="263.4" cy="241.49999999999997" r="16.5" fill="#D4A017"/>
+  <circle cx="352.5" cy="736.5" r="11.55" fill="#111111"/>
+  <ellipse cx="600.0" cy="792.0" rx="336.00000000000006" ry="22.5" fill="#000" opacity=".07"/><g transform="translate(300,180) rotate(-14,125.0,260.0)" filter="url(#shadow)"><rect width="250" height="520" rx="40.0" fill="#8E8A82"/><rect x="6.25" y="6.25" width="237.5" height="507.5" rx="36.0" fill="#A8A398"/><rect width="250" height="520" rx="40.0" fill="url(#glassSheen)" opacity=".7"/><rect x="15.0" y="15.0" width="115.0" height="115.0" rx="29.900000000000002" fill="#A8A398" stroke="#000" stroke-opacity=".12" stroke-width="2"/><rect x="15.0" y="15.0" width="115.0" height="115.0" rx="29.900000000000002" fill="#FFF" opacity=".12"/><circle cx="49.5" cy="47.2" r="23.0" fill="#2A2A2C" stroke="#8E8A82" stroke-width="4.14"/><circle cx="49.5" cy="47.2" r="14.26" fill="#0B0B12"/><circle cx="49.5" cy="47.2" r="8.049999999999999" fill="#1D2240"/><circle cx="44.44" cy="42.14" r="3.22" fill="#FFF" opacity=".55"/><circle cx="49.5" cy="97.8" r="23.0" fill="#2A2A2C" stroke="#8E8A82" stroke-width="4.14"/><circle cx="49.5" cy="97.8" r="14.26" fill="#0B0B12"/><circle cx="49.5" cy="97.8" r="8.049999999999999" fill="#1D2240"/><circle cx="44.44" cy="92.74" r="3.22" fill="#FFF" opacity=".55"/><circle cx="100.1" cy="72.5" r="23.0" fill="#2A2A2C" stroke="#8E8A82" stroke-width="4.14"/><circle cx="100.1" cy="72.5" r="14.26" fill="#0B0B12"/><circle cx="100.1" cy="72.5" r="8.049999999999999" fill="#1D2240"/><circle cx="95.03999999999999" cy="67.44" r="3.22" fill="#FFF" opacity=".55"/><circle cx="102.4" cy="38.0" r="6.8999999999999995" fill="#FFF6D8"/></g><g transform="translate(650,180) rotate(14,125.0,260.0)" filter="url(#shadow)"><rect x="-3.0" y="104.0" width="5.0" height="41.6" rx="2" fill="#2E2E30"/><rect x="248.0" y="124.8" width="5.0" height="62.4" rx="2" fill="#2E2E30"/><rect width="250" height="520" rx="40.0" fill="#2E2E30"/><rect x="11.25" y="11.25" width="227.5" height="497.5" rx="28.75" fill="url(#wall3)"/><circle cx="195.0" cy="156.0" r="95.0" fill="#FFFFFF" opacity=".08"/><circle cx="50.0" cy="405.6" r="75.0" fill="#000" opacity=".12"/><text x="125.0" y="119.60000000000001" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="300" font-size="50.0" fill="#FFF">09:41</text><text x="125.0" y="59.800000000000004" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11.25" fill="#FFF" opacity=".85">mardi 21 octobre</text><rect x="25.0" y="423.8" width="200.0" height="46.8" rx="20.0" fill="#FFF" opacity=".18"/><rect x="40.0" y="432.2" width="30.0" height="30.0" rx="7.5" fill="#F26B1D" opacity=".95"/><rect x="86.75" y="432.2" width="30.0" height="30.0" rx="7.5" fill="#FFF" opacity=".95"/><rect x="133.5" y="432.2" width="30.0" height="30.0" rx="7.5" fill="#D4A017" opacity=".95"/><rect x="180.24999999999997" y="432.2" width="30.0" height="30.0" rx="7.5" fill="#25D366" opacity=".95"/><circle cx="125.0" cy="24.25" r="5.5" fill="#000"/><rect width="250" height="520" rx="40.0" fill="url(#glassSheen)"/></g><g transform="translate(475,150) rotate(0,130.0,280.0)" filter="url(#shadow)"><rect x="-3.12" y="112.0" width="5.2" height="44.800000000000004" rx="2" fill="#1C1C1E"/><rect x="257.92" y="134.4" width="5.2" height="67.2" rx="2" fill="#1C1C1E"/><rect width="260" height="560" rx="41.6" fill="#1C1C1E"/><rect x="11.7" y="11.7" width="236.6" height="536.6" rx="29.900000000000002" fill="url(#wall1)"/><circle cx="202.8" cy="168.0" r="98.8" fill="#FFFFFF" opacity=".08"/><circle cx="52.0" cy="436.8" r="78.0" fill="#000" opacity=".12"/><text x="130.0" y="128.8" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="300" font-size="52.0" fill="#FFF">09:41</text><text x="130.0" y="64.4" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11.7" fill="#FFF" opacity=".85">mardi 21 octobre</text><rect x="26.0" y="456.4" width="208.0" height="50.4" rx="20.8" fill="#FFF" opacity=".18"/><rect x="41.6" y="465.99999999999994" width="31.2" height="31.2" rx="7.8" fill="#F26B1D" opacity=".95"/><rect x="90.22000000000001" y="465.99999999999994" width="31.2" height="31.2" rx="7.8" fill="#FFF" opacity=".95"/><rect x="138.84" y="465.99999999999994" width="31.2" height="31.2" rx="7.8" fill="#D4A017" opacity=".95"/><rect x="187.45999999999998" y="465.99999999999994" width="31.2" height="31.2" rx="7.8" fill="#25D366" opacity=".95"/><rect x="93.6" y="18.419999999999998" width="72.80000000000001" height="16.8" rx="8.4" fill="#000"/><rect width="260" height="560" rx="41.6" fill="url(#glassSheen)"/></g>
+</svg>

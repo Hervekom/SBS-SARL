@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs>
+  <radialGradient id="bgGrad" cx="50%" cy="42%" r="75%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F1F1"/>
+  </radialGradient>
+  <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#FFC59A"/>
+  </linearGradient>
+  <linearGradient id="discStrong" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".55" stop-color="#F26B1D"/><stop offset="1" stop-color="#7A2E0B"/>
+  </linearGradient>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F2CF5B"/><stop offset=".5" stop-color="#D4A017"/><stop offset="1" stop-color="#9C7410"/>
+  </linearGradient>
+  <linearGradient id="wall1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".45" stop-color="#F26B1D"/><stop offset="1" stop-color="#1A0A03"/>
+  </linearGradient>
+  <linearGradient id="wall2" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E0E10"/><stop offset=".6" stop-color="#3A2A10"/><stop offset="1" stop-color="#D4A017"/>
+  </linearGradient>
+  <linearGradient id="wall3" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B2F6B"/><stop offset=".5" stop-color="#7B3FA0"/><stop offset="1" stop-color="#F26B1D"/>
+  </linearGradient>
+  <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset=".6" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".22"/>
+  </filter>
+  <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".18"/>
+  </filter>
+
+</defs>
+<rect width="800" height="800" fill="url(#bgGrad)"/>
+  <circle cx="400.0" cy="376.0" r="288.0" fill="url(#discGrad)"/>
+  <circle cx="664.96" cy="102.40000000000003" r="25.919999999999998" fill="#F26B1D" opacity=".9"/>
+  <circle cx="106.24000000000001" cy="217.6" r="14.4" fill="#D4A017"/>
+  <circle cx="184.0" cy="649.5999999999999" r="10.080000000000002" fill="#111111"/>
+  <ellipse cx="400.0" cy="704.0" rx="224.00000000000003" ry="20.0" fill="#000" opacity=".07"/><g transform="translate(250,330) rotate(-14,150.0,63.0)" filter="url(#shadow)"><rect x="-165.0" y="22.68" width="630.0" height="80.64" rx="40.32" fill="#111111"/><rect width="300" height="126.0" rx="63.0" fill="#1E1E20"/><rect x="18.0" y="17.64" width="264.0" height="90.72" rx="45.36" fill="url(#wall1)"/><text x="150.0" y="78.12" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="47.88" fill="#FFF">8 452 pas</text><rect width="300" height="126.0" rx="63.0" fill="url(#glassSheen)"/></g>
+</svg>

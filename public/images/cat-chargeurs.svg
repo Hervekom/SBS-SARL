@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+  <radialGradient id="bgGrad" cx="50%" cy="42%" r="75%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F1F1"/>
+  </radialGradient>
+  <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#FFC59A"/>
+  </linearGradient>
+  <linearGradient id="discStrong" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".55" stop-color="#F26B1D"/><stop offset="1" stop-color="#7A2E0B"/>
+  </linearGradient>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F2CF5B"/><stop offset=".5" stop-color="#D4A017"/><stop offset="1" stop-color="#9C7410"/>
+  </linearGradient>
+  <linearGradient id="wall1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".45" stop-color="#F26B1D"/><stop offset="1" stop-color="#1A0A03"/>
+  </linearGradient>
+  <linearGradient id="wall2" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E0E10"/><stop offset=".6" stop-color="#3A2A10"/><stop offset="1" stop-color="#D4A017"/>
+  </linearGradient>
+  <linearGradient id="wall3" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B2F6B"/><stop offset=".5" stop-color="#7B3FA0"/><stop offset="1" stop-color="#F26B1D"/>
+  </linearGradient>
+  <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset=".6" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".22"/>
+  </filter>
+  <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".18"/>
+  </filter>
+
+</defs>
+<rect width="1200" height="900" fill="url(#bgGrad)"/>
+  <circle cx="600.0" cy="423.0" r="330" fill="url(#discGrad)"/>
+  <circle cx="903.6" cy="109.5" r="29.7" fill="#F26B1D" opacity=".9"/>
+  <circle cx="263.4" cy="241.49999999999997" r="16.5" fill="#D4A017"/>
+  <circle cx="352.5" cy="736.5" r="11.55" fill="#111111"/>
+  <ellipse cx="600.0" cy="792.0" rx="336.00000000000006" ry="22.5" fill="#000" opacity=".07"/><path d="M 420 640 C 520 760, 760 720, 780 560" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="20" stroke-linecap="round" transform="translate(0,8)"/><path d="M 420 640 C 520 760, 760 720, 780 560" fill="none" stroke="#F4F4F4" stroke-width="14" stroke-linecap="round"/><path d="M 420 640 C 520 760, 760 720, 780 560" fill="none" stroke="#FFF" stroke-opacity=".35" stroke-width="4.2" stroke-linecap="round" stroke-dasharray="6 10"/><g transform="translate(760,220) rotate(10,100.0,190.0)" filter="url(#shadow)"><rect width="200" height="380" rx="28.000000000000004" fill="#1B1B1D"/><rect x="8.0" y="8.0" width="184.0" height="364.0" rx="22.0" fill="#FFF" opacity=".05"/><rect width="200" height="380" rx="28.000000000000004" fill="url(#glassSheen)" opacity=".6"/><text x="100.0" y="159.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="40.0" fill="#FFF">20000</text><text x="100.0" y="190.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="600" font-size="16.0" fill="#F2CF5B" letter-spacing="3">mAh · 22.5W</text><circle cx="64.0" cy="250.8" r="6.0" fill="#F26B1D"/><circle cx="88.0" cy="250.8" r="6.0" fill="#F26B1D"/><circle cx="112.00000000000001" cy="250.8" r="6.0" fill="#F26B1D"/><circle cx="136.0" cy="250.8" r="6.0" fill="#444"/><rect x="40.0" y="304.0" width="120.0" height="15.200000000000001" rx="4" fill="url(#discStrong)"/></g><g transform="translate(300,470) rotate(-8,85.0,85.0)" filter="url(#shadow)"><rect x="51.0" y="-37.4" width="13.6" height="44.2" rx="4" fill="#B8BCC2"/><rect x="105.4" y="-37.4" width="13.6" height="44.2" rx="4" fill="#B8BCC2"/><rect width="170" height="170" rx="34.0" fill="#F4F4F4" stroke="#000" stroke-opacity=".08" stroke-width="2"/><rect width="170" height="170" rx="34.0" fill="url(#glassSheen)"/><rect x="56.1" y="71.39999999999999" width="57.800000000000004" height="20.4" rx="10.2" fill="#222"/><text x="85.0" y="139.4" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="20.4" fill="#9A9A9A">25W</text></g><g transform="translate(500,170) rotate(-6,99.00000000000001,180.0)" filter="url(#shadow)"><linearGradient id="cc1" x1="0" x2="1"><stop offset="0" stop-color="#2B2B2D"/><stop offset=".5" stop-color="#4A4A4E"/><stop offset="1" stop-color="#1C1C1E"/></linearGradient><rect x="35.64" y="151.2" width="126.72000000000003" height="172.79999999999998" rx="23.76" fill="url(#cc1)"/><rect x="83.16000000000001" y="316.8" width="31.680000000000007" height="36.0" rx="9.900000000000002" fill="url(#goldGrad)"/><rect x="19.800000000000004" y="216.0" width="19.800000000000004" height="36.0" rx="3" fill="#C9CCD1"/><rect x="158.40000000000003" y="216.0" width="19.800000000000004" height="36.0" rx="3" fill="#C9CCD1"/><rect width="198.00000000000003" height="165.6" rx="43.56000000000001" fill="url(#cc1)"/><rect x="9.900000000000002" y="7.2" width="178.20000000000002" height="151.2" rx="39.60000000000001" fill="#18181A"/><rect x="49.50000000000001" y="36.0" width="99.00000000000001" height="25.200000000000003" rx="10.799999999999999" fill="#000" stroke="#F26B1D" stroke-width="2"/><rect x="43.56000000000001" y="86.39999999999999" width="110.88000000000002" height="32.4" rx="4" fill="#000" stroke="#555" stroke-width="2"/><text x="99.00000000000001" y="147.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="23.76" fill="#F26B1D">38W PD</text><rect width="198.00000000000003" height="165.6" rx="43.56000000000001" fill="url(#glassSheen)" opacity=".5"/></g><g transform="translate(700,620) rotate(0,75.0,60.0)" filter="url(#shadow)"><rect width="150" height="120.0" rx="43.199999999999996" fill="#1B1B1D" stroke="#000" stroke-opacity=".08" stroke-width="2"/><line x1="6.0" y1="43.199999999999996" x2="144.0" y2="43.199999999999996" stroke="#000" stroke-opacity=".15" stroke-width="3"/><circle cx="75.0" cy="74.4" r="3.75" fill="#D4A017"/><rect width="150" height="120.0" rx="43.199999999999996" fill="url(#glassSheen)"/></g><g transform="translate(707.5,730.4) rotate(-18)" filter="url(#softShadow)"><ellipse cx="24.0" cy="19.5" rx="24.0" ry="19.5" fill="#1B1B1D" stroke="#000" stroke-opacity=".1" stroke-width="2"/><rect x="33.0" y="21.000000000000004" width="12.0" height="42.00000000000001" rx="6.0" fill="#1B1B1D" stroke="#000" stroke-opacity=".1" stroke-width="2"/><ellipse cx="15.0" cy="18.0" rx="9.0" ry="7.5" fill="#555" opacity=".6"/></g><g transform="translate(793.0,730.4) rotate(22)" filter="url(#softShadow)"><ellipse cx="24.0" cy="19.5" rx="24.0" ry="19.5" fill="#1B1B1D" stroke="#000" stroke-opacity=".1" stroke-width="2"/><rect x="33.0" y="21.000000000000004" width="12.0" height="42.00000000000001" rx="6.0" fill="#1B1B1D" stroke="#000" stroke-opacity=".1" stroke-width="2"/><ellipse cx="15.0" cy="18.0" rx="9.0" ry="7.5" fill="#555" opacity=".6"/></g>
+</svg>

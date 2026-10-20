@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs>
+  <radialGradient id="bgGrad" cx="50%" cy="42%" r="75%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F1F1"/>
+  </radialGradient>
+  <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#FFC59A"/>
+  </linearGradient>
+  <linearGradient id="discStrong" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".55" stop-color="#F26B1D"/><stop offset="1" stop-color="#7A2E0B"/>
+  </linearGradient>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F2CF5B"/><stop offset=".5" stop-color="#D4A017"/><stop offset="1" stop-color="#9C7410"/>
+  </linearGradient>
+  <linearGradient id="wall1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".45" stop-color="#F26B1D"/><stop offset="1" stop-color="#1A0A03"/>
+  </linearGradient>
+  <linearGradient id="wall2" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E0E10"/><stop offset=".6" stop-color="#3A2A10"/><stop offset="1" stop-color="#D4A017"/>
+  </linearGradient>
+  <linearGradient id="wall3" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B2F6B"/><stop offset=".5" stop-color="#7B3FA0"/><stop offset="1" stop-color="#F26B1D"/>
+  </linearGradient>
+  <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset=".6" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".22"/>
+  </filter>
+  <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".18"/>
+  </filter>
+
+</defs>
+<rect width="800" height="800" fill="url(#bgGrad)"/>
+  <circle cx="400.0" cy="376.0" r="288.0" fill="url(#discGrad)"/>
+  <circle cx="664.96" cy="102.40000000000003" r="25.919999999999998" fill="#F26B1D" opacity=".9"/>
+  <circle cx="106.24000000000001" cy="217.6" r="14.4" fill="#D4A017"/>
+  <circle cx="184.0" cy="649.5999999999999" r="10.080000000000002" fill="#111111"/>
+  <ellipse cx="400.0" cy="704.0" rx="224.00000000000003" ry="20.0" fill="#000" opacity=".07"/><path d="M 470 520 C 560 600, 640 560, 640 450 S 600 260, 520 230" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="20" stroke-linecap="round" transform="translate(0,8)"/><path d="M 470 520 C 560 600, 640 560, 640 450 S 600 260, 520 230" fill="none" stroke="#1C1C1E" stroke-width="14" stroke-linecap="round"/><path d="M 470 520 C 560 600, 640 560, 640 450 S 600 260, 520 230" fill="none" stroke="#FFF" stroke-opacity=".35" stroke-width="4.2" stroke-linecap="round" stroke-dasharray="6 10"/><g transform="translate(505,175) rotate(-25,17.0,30.0)" filter="url(#softShadow)"><rect width="34" height="60" rx="8.5" fill="#1C1C1E"/><rect x="6.800000000000001" y="-25.2" width="20.4" height="27.0" rx="6.119999999999999" fill="#C9CCD1"/><rect width="34" height="60" rx="8.5" fill="url(#glassSheen)"/></g><g transform="translate(280,180) rotate(-10,121.00000000000001,220.0)" filter="url(#shadow)"><linearGradient id="cc1" x1="0" x2="1"><stop offset="0" stop-color="#2B2B2D"/><stop offset=".5" stop-color="#4A4A4E"/><stop offset="1" stop-color="#1C1C1E"/></linearGradient><rect x="43.56" y="184.79999999999998" width="154.88000000000002" height="211.2" rx="29.040000000000003" fill="url(#cc1)"/><rect x="101.64000000000001" y="387.2" width="38.720000000000006" height="44.0" rx="12.100000000000001" fill="url(#goldGrad)"/><rect x="24.200000000000003" y="264.0" width="24.200000000000003" height="44.0" rx="3" fill="#C9CCD1"/><rect x="193.60000000000002" y="264.0" width="24.200000000000003" height="44.0" rx="3" fill="#C9CCD1"/><rect width="242.00000000000003" height="202.4" rx="53.24000000000001" fill="url(#cc1)"/><rect x="12.100000000000001" y="8.8" width="217.80000000000004" height="184.79999999999998" rx="48.400000000000006" fill="#18181A"/><rect x="60.50000000000001" y="44.0" width="121.00000000000001" height="30.800000000000004" rx="13.2" fill="#000" stroke="#F26B1D" stroke-width="2"/><rect x="53.24000000000001" y="105.6" width="135.52000000000004" height="39.6" rx="4" fill="#000" stroke="#555" stroke-width="2"/><text x="121.00000000000001" y="180.39999999999998" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="29.040000000000003" fill="#F26B1D">38W PD</text><rect width="242.00000000000003" height="202.4" rx="53.24000000000001" fill="url(#glassSheen)" opacity=".5"/></g>
+</svg>

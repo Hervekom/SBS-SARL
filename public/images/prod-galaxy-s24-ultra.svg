@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs>
+  <radialGradient id="bgGrad" cx="50%" cy="42%" r="75%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F1F1"/>
+  </radialGradient>
+  <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#FFC59A"/>
+  </linearGradient>
+  <linearGradient id="discStrong" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".55" stop-color="#F26B1D"/><stop offset="1" stop-color="#7A2E0B"/>
+  </linearGradient>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F2CF5B"/><stop offset=".5" stop-color="#D4A017"/><stop offset="1" stop-color="#9C7410"/>
+  </linearGradient>
+  <linearGradient id="wall1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".45" stop-color="#F26B1D"/><stop offset="1" stop-color="#1A0A03"/>
+  </linearGradient>
+  <linearGradient id="wall2" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E0E10"/><stop offset=".6" stop-color="#3A2A10"/><stop offset="1" stop-color="#D4A017"/>
+  </linearGradient>
+  <linearGradient id="wall3" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B2F6B"/><stop offset=".5" stop-color="#7B3FA0"/><stop offset="1" stop-color="#F26B1D"/>
+  </linearGradient>
+  <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset=".6" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".22"/>
+  </filter>
+  <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".18"/>
+  </filter>
+
+</defs>
+<rect width="800" height="800" fill="url(#bgGrad)"/>
+  <circle cx="400.0" cy="376.0" r="288.0" fill="url(#discGrad)"/>
+  <circle cx="664.96" cy="102.40000000000003" r="25.919999999999998" fill="#F26B1D" opacity=".9"/>
+  <circle cx="106.24000000000001" cy="217.6" r="14.4" fill="#D4A017"/>
+  <circle cx="184.0" cy="649.5999999999999" r="10.080000000000002" fill="#111111"/>
+  <ellipse cx="400.0" cy="704.0" rx="224.00000000000003" ry="20.0" fill="#000" opacity=".07"/><g transform="translate(400,140) rotate(7,125.0,265.0)" filter="url(#shadow)"><rect x="-3.0" y="106.0" width="5.0" height="42.4" rx="2" fill="#2E2E30"/><rect x="248.0" y="127.19999999999999" width="5.0" height="63.599999999999994" rx="2" fill="#2E2E30"/><rect width="250" height="530" rx="40.0" fill="#2E2E30"/><rect x="11.25" y="11.25" width="227.5" height="507.5" rx="28.75" fill="url(#wall3)"/><circle cx="195.0" cy="159.0" r="95.0" fill="#FFFFFF" opacity=".08"/><circle cx="50.0" cy="413.40000000000003" r="75.0" fill="#000" opacity=".12"/><text x="125.0" y="121.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="300" font-size="50.0" fill="#FFF">09:41</text><text x="125.0" y="60.95" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11.25" fill="#FFF" opacity=".85">mardi 21 octobre</text><rect x="25.0" y="431.95" width="200.0" height="47.699999999999996" rx="20.0" fill="#FFF" opacity=".18"/><rect x="40.0" y="440.8" width="30.0" height="30.0" rx="7.5" fill="#F26B1D" opacity=".95"/><rect x="86.75" y="440.8" width="30.0" height="30.0" rx="7.5" fill="#FFF" opacity=".95"/><rect x="133.5" y="440.8" width="30.0" height="30.0" rx="7.5" fill="#D4A017" opacity=".95"/><rect x="180.24999999999997" y="440.8" width="30.0" height="30.0" rx="7.5" fill="#25D366" opacity=".95"/><circle cx="125.0" cy="24.5" r="5.5" fill="#000"/><rect width="250" height="530" rx="40.0" fill="url(#glassSheen)"/></g><g transform="translate(165,130) rotate(-7,125.0,265.0)" filter="url(#shadow)"><rect width="250" height="530" rx="40.0" fill="#2E2E30"/><rect x="6.25" y="6.25" width="237.5" height="517.5" rx="36.0" fill="#3D3B48"/><rect width="250" height="530" rx="40.0" fill="url(#glassSheen)" opacity=".7"/><circle cx="50.0" cy="42.5" r="21.25" fill="#2A2A2C" stroke="#2E2E30" stroke-width="3.8249999999999997"/><circle cx="50.0" cy="42.5" r="13.175" fill="#0B0B12"/><circle cx="50.0" cy="42.5" r="7.437499999999999" fill="#1D2240"/><circle cx="45.325" cy="37.825" r="2.975" fill="#FFF" opacity=".55"/><circle cx="50.0" cy="95.625" r="21.25" fill="#2A2A2C" stroke="#2E2E30" stroke-width="3.8249999999999997"/><circle cx="50.0" cy="95.625" r="13.175" fill="#0B0B12"/><circle cx="50.0" cy="95.625" r="7.437499999999999" fill="#1D2240"/><circle cx="45.325" cy="90.95" r="2.975" fill="#FFF" opacity=".55"/><circle cx="50.0" cy="148.75" r="21.25" fill="#2A2A2C" stroke="#2E2E30" stroke-width="3.8249999999999997"/><circle cx="50.0" cy="148.75" r="13.175" fill="#0B0B12"/><circle cx="50.0" cy="148.75" r="7.437499999999999" fill="#1D2240"/><circle cx="45.325" cy="144.075" r="2.975" fill="#FFF" opacity=".55"/><circle cx="92.5" cy="42.5" r="6.375" fill="#FFF6D8"/><text x="125.0" y="371.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" letter-spacing="2" font-size="21.25" fill="#000" opacity=".28">SAMSUNG</text></g>
+</svg>

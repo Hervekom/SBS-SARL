@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs>
+  <radialGradient id="bgGrad" cx="50%" cy="42%" r="75%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F1F1"/>
+  </radialGradient>
+  <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#FFC59A"/>
+  </linearGradient>
+  <linearGradient id="discStrong" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".55" stop-color="#F26B1D"/><stop offset="1" stop-color="#7A2E0B"/>
+  </linearGradient>
+  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F2CF5B"/><stop offset=".5" stop-color="#D4A017"/><stop offset="1" stop-color="#9C7410"/>
+  </linearGradient>
+  <linearGradient id="wall1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F99A4E"/><stop offset=".45" stop-color="#F26B1D"/><stop offset="1" stop-color="#1A0A03"/>
+  </linearGradient>
+  <linearGradient id="wall2" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E0E10"/><stop offset=".6" stop-color="#3A2A10"/><stop offset="1" stop-color="#D4A017"/>
+  </linearGradient>
+  <linearGradient id="wall3" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B2F6B"/><stop offset=".5" stop-color="#7B3FA0"/><stop offset="1" stop-color="#F26B1D"/>
+  </linearGradient>
+  <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset=".6" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".22"/>
+  </filter>
+  <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".18"/>
+  </filter>
+
+</defs>
+<rect width="800" height="800" fill="url(#bgGrad)"/>
+  <circle cx="400.0" cy="376.0" r="288.0" fill="url(#discGrad)"/>
+  <circle cx="664.96" cy="102.40000000000003" r="25.919999999999998" fill="#F26B1D" opacity=".9"/>
+  <circle cx="106.24000000000001" cy="217.6" r="14.4" fill="#D4A017"/>
+  <circle cx="184.0" cy="649.5999999999999" r="10.080000000000002" fill="#111111"/>
+  <ellipse cx="400.0" cy="704.0" rx="224.00000000000003" ry="20.0" fill="#000" opacity=".07"/><g transform="translate(310,170) rotate(4,115.0,240.0)" filter="url(#shadow)"><rect x="-2.7600000000000002" y="96.0" width="4.6000000000000005" height="38.4" rx="2" fill="#1C1C1E"/><rect x="228.16" y="115.19999999999999" width="4.6000000000000005" height="57.599999999999994" rx="2" fill="#1C1C1E"/><rect width="230" height="480" rx="36.800000000000004" fill="#1C1C1E"/><rect x="10.35" y="10.35" width="209.3" height="459.3" rx="26.450000000000003" fill="url(#wall2)"/><circle cx="179.4" cy="144.0" r="87.4" fill="#FFFFFF" opacity=".08"/><circle cx="46.0" cy="374.40000000000003" r="69.0" fill="#000" opacity=".12"/><text x="115.0" y="110.4" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="300" font-size="46.0" fill="#FFF">09:41</text><text x="115.0" y="55.2" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10.35" fill="#FFF" opacity=".85">mardi 21 octobre</text><rect x="23.0" y="391.2" width="184.0" height="43.199999999999996" rx="18.400000000000002" fill="#FFF" opacity=".18"/><rect x="36.800000000000004" y="399.0" width="27.599999999999998" height="27.599999999999998" rx="6.8999999999999995" fill="#F26B1D" opacity=".95"/><rect x="79.81000000000002" y="399.0" width="27.599999999999998" height="27.599999999999998" rx="6.8999999999999995" fill="#FFF" opacity=".95"/><rect x="122.82000000000001" y="399.0" width="27.599999999999998" height="27.599999999999998" rx="6.8999999999999995" fill="#D4A017" opacity=".95"/><rect x="165.82999999999996" y="399.0" width="27.599999999999998" height="27.599999999999998" rx="6.8999999999999995" fill="#25D366" opacity=".95"/><rect x="82.8" y="16.11" width="64.4" height="14.399999999999999" rx="7.199999999999999" fill="#000"/><rect width="230" height="480" rx="36.800000000000004" fill="url(#glassSheen)"/></g><g transform="translate(250,140) rotate(-10,115.0,240.0)" filter="url(#softShadow)"><rect width="230" height="480" rx="36.800000000000004" fill="#1A1A1A" fill-opacity=".55" stroke="#FFFFFF" stroke-width="4.6000000000000005"/><rect x="6.8999999999999995" y="6.8999999999999995" width="216.2" height="466.2" rx="31.28" fill="none" stroke="#000" stroke-opacity=".75" stroke-width="8.05"/><rect x="87.4" y="11.5" width="55.199999999999996" height="8.05" rx="3.91" fill="#000" opacity=".5"/><path d="M 23.0 168.0 L 126.50000000000001 38.4 L 172.5 38.4 L 23.0 240.0 Z" fill="#FFF" opacity=".55"/><path d="M 34.5 297.6 L 207.0 86.39999999999999 L 207.0 115.19999999999999 L 34.5 326.40000000000003 Z" fill="#FFF" opacity=".35"/></g>
+</svg>
