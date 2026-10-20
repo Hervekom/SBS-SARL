@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useShop } from '../../context/ShopContext';
 import { BrandLogo } from './BrandLogo';
 import { CATEGORIES, SHOP, whatsappLink } from '../../data/products';
@@ -162,8 +163,8 @@ export const Header: React.FC = () => {
         </div>
       )}
 
-      {/* Menu mobile */}
-      {menuOpen && (
+      {/* Menu mobile : rendu dans <body> (le flou de l'en-tête crée un conteneur qui rognerait un panneau « fixed ») */}
+      {menuOpen && createPortal(
         <div className="fixed inset-0 z-50 lg:hidden">
           <div onClick={() => setMenuOpen(false)} className="fixed inset-0 bg-ink/50" />
           <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-porcelain flex flex-col">
@@ -208,7 +209,7 @@ export const Header: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </header>
   );
 };
