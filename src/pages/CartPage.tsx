@@ -90,7 +90,7 @@ export const CartPage: React.FC = () => {
                       >
                         -
                       </button>
-                      <span className="px-3 text-xs font-mono font-bold">{item.quantity}</span>
+                      <span className="px-3 text-xs font-bold">{item.quantity}</span>
                       <button
                         onClick={() => updateCartQuantity(item.product.id, item.quantity + 1)}
                         className="px-2 py-1 text-xs font-bold hover:text-brand"
@@ -101,7 +101,7 @@ export const CartPage: React.FC = () => {
 
                     {/* Total item price */}
                     <div className="text-right sm:w-28">
-                      <span className="text-sm font-bold text-ink font-mono tabular-nums block">
+                      <span className="text-sm font-bold text-ink tabular-nums block">
                         {formatPrice(item.product.price * item.quantity)}
                       </span>
                       <button
@@ -132,7 +132,7 @@ export const CartPage: React.FC = () => {
                       value={promoInput}
                       onChange={(e) => setPromoInput(e.target.value)}
                       placeholder="Code (ex: SBS10)"
-                      className="w-full pl-9 pr-3 py-2 text-xs bg-[#F4F2EF] border border-ink/10 rounded-xl focus:outline-none focus:border-brand uppercase font-mono"
+                      className="w-full pl-9 pr-3 py-2 text-xs bg-[#F4F2EF] border border-ink/10 rounded-xl focus:outline-none focus:border-brand uppercase"
                     />
                   </div>
                   <button
@@ -157,17 +157,17 @@ export const CartPage: React.FC = () => {
               <div className="space-y-2.5 text-xs text-neutral-600 border-b border-ink/10 pb-4">
                 <div className="flex justify-between">
                   <span>Sous-total articles</span>
-                  <span className="font-mono tabular-nums text-ink">{formatPrice(cartTotal)}</span>
+                  <span className="tabular-nums text-ink">{formatPrice(cartTotal)}</span>
                 </div>
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-emerald-600 font-semibold">
                     <span>Remise ({discountPercent}%)</span>
-                    <span className="font-mono tabular-nums">-{formatPrice(discountAmount)}</span>
+                    <span className="tabular-nums">-{formatPrice(discountAmount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span>Frais de livraison</span>
-                  <span className="font-mono tabular-nums text-ink">
+                  <span className="tabular-nums text-ink">
                     Selon la zone (étape suivante)
                   </span>
                 </div>
@@ -176,7 +176,7 @@ export const CartPage: React.FC = () => {
               {/* Total */}
               <div className="flex items-baseline justify-between">
                 <span className="text-sm font-bold text-ink">Total hors livraison</span>
-                <span className="text-xl font-extrabold text-ink font-mono tabular-nums">
+                <span className="text-xl font-extrabold text-ink tabular-nums">
                   {formatPrice(finalTotal)}
                 </span>
               </div>

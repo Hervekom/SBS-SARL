@@ -55,14 +55,14 @@ export const CartDrawer: React.FC = () => {
         className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-porcelain shadow-2xl flex flex-col justify-between border-l border-ink/10 animate-slideInRight">
+      <div className="fixed inset-y-0 right-0 w-[min(100%,28rem)] flex">
+        <div className="w-full bg-porcelain shadow-2xl flex flex-col justify-between border-l border-ink/10 animate-slideInRight">
           {/* Header */}
           <div className="p-5 border-b border-ink/10 flex items-center justify-between bg-white">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5 text-brand" />
               <h2 className="text-base font-semibold text-ink">
-                Votre Panier <span className="font-mono text-sm text-neutral-500">({cartCount})</span>
+                Votre Panier <span className="text-sm text-neutral-500">({cartCount})</span>
               </h2>
             </div>
             <button
@@ -78,7 +78,7 @@ export const CartDrawer: React.FC = () => {
           <div className="bg-[#F4F2EF] px-5 py-3 border-b border-ink/10 text-xs">
             {amountLeftForFreeShipping > 0 ? (
               <p className="text-neutral-700 mb-1.5">
-                Ajoutez encore <strong className="text-brand-dark font-mono">{formatPrice(amountLeftForFreeShipping)}</strong> pour bénéficier de la <strong className="font-semibold text-ink">Livraison Offerte</strong> !
+                Ajoutez encore <strong className="text-brand-dark">{formatPrice(amountLeftForFreeShipping)}</strong> pour bénéficier de la <strong className="font-semibold text-ink">Livraison Offerte</strong> !
               </p>
             ) : (
               <p className="text-emerald-700 font-semibold flex items-center gap-1.5 mb-1.5">
@@ -126,7 +126,7 @@ export const CartDrawer: React.FC = () => {
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="px-2 text-xs font-mono font-bold text-ink">
+                        <span className="px-2 text-xs font-bold text-ink">
                           {item.quantity}
                         </span>
                         <button
@@ -138,7 +138,7 @@ export const CartDrawer: React.FC = () => {
                         </button>
                       </div>
 
-                      <span className="text-xs font-bold text-ink font-mono tabular-nums">
+                      <span className="text-xs font-bold text-ink tabular-nums whitespace-nowrap">
                         {formatPrice(item.product.price * item.quantity)}
                       </span>
                     </div>
@@ -188,7 +188,7 @@ export const CartDrawer: React.FC = () => {
                     value={promoInput}
                     onChange={(e) => setPromoInput(e.target.value)}
                     placeholder="Code promo (ex: SBS10)"
-                    className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#F4F2EF] border border-ink/10 rounded-lg focus:outline-none focus:border-brand uppercase font-mono"
+                    className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#F4F2EF] border border-ink/10 rounded-lg focus:outline-none focus:border-brand uppercase"
                   />
                 </div>
                 <button
@@ -213,12 +213,12 @@ export const CartDrawer: React.FC = () => {
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between text-neutral-600">
                   <span>Sous-total</span>
-                  <span className="font-mono tabular-nums">{formatPrice(cartTotal)}</span>
+                  <span className="tabular-nums">{formatPrice(cartTotal)}</span>
                 </div>
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-emerald-600 font-semibold">
                     <span>Remise ({discountPercent}%)</span>
-                    <span className="font-mono tabular-nums">-{formatPrice(discountAmount)}</span>
+                    <span className="tabular-nums">-{formatPrice(discountAmount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-neutral-600">
@@ -227,7 +227,7 @@ export const CartDrawer: React.FC = () => {
                 </div>
                 <div className="pt-2 border-t border-ink/10 flex justify-between text-sm font-bold text-ink">
                   <span>Total estimé</span>
-                  <span className="text-base text-ink font-mono tabular-nums">
+                  <span className="text-base text-ink tabular-nums">
                     {formatPrice(finalTotal)}
                   </span>
                 </div>

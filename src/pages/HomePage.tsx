@@ -134,7 +134,7 @@ export const HomePage: React.FC = () => {
         />
         <div className="absolute inset-0 -z-10 bg-ink/70 lg:bg-gradient-to-r lg:from-ink lg:from-55% lg:via-ink/85 lg:to-ink/30" />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-8 sm:pt-32 sm:pb-9">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-8 sm:pt-32 sm:pb-9 [@media(max-height:500px)]:pt-24 [@media(max-height:500px)]:pb-6">
           <div className="max-w-2xl text-white">
             <p className="text-sm font-medium text-white/70">Boutique d’électronique à {SHOP.city}</p>
             <h1 className="mt-2 text-[28px] sm:text-[44px] leading-[1.08]">
@@ -159,7 +159,7 @@ export const HomePage: React.FC = () => {
                 type="search"
                 value={heroSearch}
                 onChange={(e) => setHeroSearch(e.target.value)}
-                placeholder="Que cherchez-vous ? iPhone, verre trempé, chargeur auto…"
+                placeholder="iPhone, verre trempé, chargeur…"
                 className="w-full rounded-full bg-white text-ink pl-12 pr-32 py-3.5 text-sm sm:text-base placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-brand"
                 aria-label="Rechercher un produit"
               />
@@ -184,7 +184,7 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          <ul className="hidden sm:flex mt-6 pt-4 border-t border-white/10 flex-wrap gap-x-8 gap-y-2 text-sm text-white/75">
+          <ul className="hidden sm:flex [@media(max-height:500px)]:hidden mt-6 pt-4 border-t border-white/10 flex-wrap gap-x-8 gap-y-2 text-sm text-white/75">
             {['Téléphones neufs et scellés', 'Livraison 24 h à Douala', 'Pose du verre offerte', 'Espèces, Orange Money, MTN MoMo'].map((t) => (
               <li key={t} className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-gold-light" strokeWidth={3} />
@@ -197,8 +197,8 @@ export const HomePage: React.FC = () => {
 
       {/* ================= PRODUITS ================= */}
       <Section id="produits" className="bg-porcelain pt-8! sm:pt-10!">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-2xl sm:text-3xl">Nos produits phares</h2>
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <h2 className="text-2xl sm:text-3xl whitespace-nowrap">Nos produits phares</h2>
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
             {[{ id: 'top' as const, label: 'Top ventes' }, ...CATEGORIES.map((c) => ({ id: c.id, label: c.name }))].map((t) => (
               <button

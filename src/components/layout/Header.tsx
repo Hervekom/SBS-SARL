@@ -68,7 +68,10 @@ export const Header: React.FC = () => {
         <div className="bg-brand text-white text-xs">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-center gap-2 text-center">
             <span>
-              Livraison gratuite à Douala dès 50 000 FCFA · Code <strong className="font-semibold">{SHOP.promoCode}</strong> : -10%
+              Livraison gratuite à Douala dès 50 000 FCFA
+              <span className="hidden sm:inline">
+                {' '}· Code <strong className="font-semibold">{SHOP.promoCode}</strong> : -10%
+              </span>
             </span>
             <a
               href={whatsappLink('Bonjour SBS SARL, je souhaite passer une commande.')}
@@ -82,19 +85,19 @@ export const Header: React.FC = () => {
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-[72px] flex items-center justify-between gap-4">
-        <button onClick={() => go('/')} className="shrink-0 cursor-pointer" aria-label="Accueil SBS SARL">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-[72px] flex items-center justify-between gap-2 sm:gap-4">
+        <button onClick={() => go('/')} className="min-w-0 cursor-pointer" aria-label="Accueil SBS SARL">
           <BrandLogo size="sm" variant={solid ? 'dark' : 'light'} />
         </button>
 
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden xl:flex items-center gap-6">
           {links.map((l) => {
             const active = currentPath === l.path;
             return (
               <button
                 key={l.path}
                 onClick={() => go(l.path)}
-                className={`text-sm transition-colors cursor-pointer ${
+                className={`text-sm whitespace-nowrap transition-colors cursor-pointer ${
                   solid
                     ? active
                       ? 'text-brand-dark font-semibold'
@@ -110,8 +113,8 @@ export const Header: React.FC = () => {
           })}
         </nav>
 
-        <div className="flex items-center gap-1 sm:gap-1.5">
-          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className={iconBtn} aria-label="Rechercher">
+        <div className="flex items-center gap-0.5 sm:gap-1.5 shrink-0">
+          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className={`hidden sm:flex ${iconBtn}`} aria-label="Rechercher">
             <Search className="w-[18px] h-[18px]" />
           </button>
           <button onClick={() => go('/compte')} className={`hidden lg:flex ${iconBtn}`} aria-label="Mon compte">
@@ -127,7 +130,7 @@ export const Header: React.FC = () => {
           </button>
           <button
             onClick={() => setIsCartDrawerOpen(true)}
-            className="ml-1 inline-flex items-center gap-2 rounded-full bg-brand hover:bg-brand-hover text-white pl-3.5 pr-2 py-2 text-sm font-semibold transition-colors cursor-pointer"
+            className="ml-1 inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-brand hover:bg-brand-hover text-white pl-3 sm:pl-3.5 pr-2 py-2 text-sm font-semibold transition-colors cursor-pointer shrink-0"
             aria-label="Ouvrir mon panier"
           >
             <ShoppingBag className="w-4 h-4" />
@@ -136,7 +139,7 @@ export const Header: React.FC = () => {
               {cartCount}
             </span>
           </button>
-          <button onClick={() => setMenuOpen(true)} className={`lg:hidden ${iconBtn}`} aria-label="Ouvrir le menu">
+          <button onClick={() => setMenuOpen(true)} className={`xl:hidden shrink-0 ${iconBtn}`} aria-label="Ouvrir le menu">
             <Menu className="w-5 h-5" />
           </button>
         </div>
@@ -165,7 +168,7 @@ export const Header: React.FC = () => {
 
       {/* Menu mobile : rendu dans <body> (le flou de l'en-tête crée un conteneur qui rognerait un panneau « fixed ») */}
       {menuOpen && createPortal(
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 xl:hidden">
           <div onClick={() => setMenuOpen(false)} className="fixed inset-0 bg-ink/50" />
           <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-porcelain flex flex-col">
             <div className="h-16 px-4 flex items-center justify-between border-b border-ink/10">

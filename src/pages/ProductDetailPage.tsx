@@ -405,7 +405,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                     />
                   ))}
                 </div>
-                <span className="text-xs font-mono font-bold text-neutral-800">
+                <span className="text-xs font-bold text-neutral-800">
                   {(product.rating || 5).toFixed(1)} / 5
                 </span>
                 <span className="text-xs text-neutral-400">
@@ -415,7 +415,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             </div>
 
             {/* 4. Prix & ancien prix en FCFA */}
-            <div className="p-4 rounded-2xl bg-porcelain border border-ink/5 flex items-baseline justify-between">
+            <div className="p-4 rounded-2xl bg-porcelain border border-ink/5 flex flex-wrap items-end justify-between gap-2">
               <div>
                 <span className="text-[11px] text-neutral-500 uppercase font-semibold block">
                   Prix SBS
@@ -429,7 +429,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
               {(product.original_price || product.originalPrice) && (
                 <div className="text-right">
-                  <span className="text-xs text-neutral-400 line-through font-mono tabular-nums block">
+                  <span className="text-xs text-neutral-400 line-through tabular-nums block">
                     {formatPrice(unitOldPrice!)}
                   </span>
                   <span className="text-[11px] font-bold text-brand-dark bg-blush px-2 py-0.5 rounded-md mt-0.5 inline-block">
@@ -489,7 +489,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                   >
                     -
                   </button>
-                  <span className="px-3 text-xs sm:text-sm font-mono font-bold text-ink">
+                  <span className="px-3 text-xs sm:text-sm font-bold text-ink">
                     {quantity}
                   </span>
                   <button
@@ -548,14 +548,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                             type="checkbox"
                             checked={isPicked(b.id)}
                             onChange={(e) => setBundlePicked((prev) => ({ ...prev, [b.id]: e.target.checked }))}
-                            className="w-4 h-4 accent-[#F26B1D]"
+                            className="w-4 h-4 accent-[#F26B1D] shrink-0"
                           />
-                          <img src={b.image} alt="" className="w-10 h-10 rounded-lg object-cover bg-[#F4F2EF]" />
+                          <img src={b.image} alt="" className="w-10 h-10 rounded-lg object-cover bg-[#F4F2EF] shrink-0" />
                           <span className="flex-1 min-w-0 text-sm leading-snug">
-                            <span className="line-clamp-1">{b.name}</span>
-                            {bundleVariant(b) && <span className="block text-xs text-ink/50">{bundleVariant(b)}</span>}
+                            <span className="line-clamp-2">{b.name}</span>
+                            <span className="block text-xs text-ink/50">
+                              {bundleVariant(b) ? `${bundleVariant(b)} · ` : ''}
+                              <span className="font-semibold text-ink">{formatPrice(b.price)}</span>
+                            </span>
                           </span>
-                          <span className="text-sm font-semibold tabular-nums">{formatPrice(b.price)}</span>
                         </label>
                       </li>
                     ))}
@@ -578,7 +580,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                   <Share2 className="w-3.5 h-3.5" />
                   <span>{copiedLink ? 'Lien copié !' : 'Partager'}</span>
                 </button>
-                <span className="font-mono text-[11px] text-neutral-400">Réf : {product.id}</span>
+                <span className="text-[11px] text-neutral-400">Réf : {product.id}</span>
               </div>
             </div>
 
@@ -704,7 +706,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                             }`}
                           >
                             <span className="font-semibold text-ink">{key}</span>
-                            <span className="text-neutral-600 sm:col-span-2 font-mono">{val}</span>
+                            <span className="text-neutral-600 sm:col-span-2">{val}</span>
                           </div>
                         ))}
                       </div>
@@ -781,7 +783,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                 <div className="p-4 md:p-0 space-y-4">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-porcelain border border-ink/10">
                     <div>
-                      <p className="text-2xl font-extrabold text-ink font-mono">
+                      <p className="text-2xl font-extrabold text-ink">
                         {(product.rating || 5).toFixed(1)} / 5
                       </p>
                       <div className="flex text-gold my-1">
@@ -816,7 +818,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                             <span className="text-neutral-400">·</span>
                             <span className="text-neutral-500">{rev.location}</span>
                           </div>
-                          <span className="text-neutral-400 font-mono text-[11px]">{rev.date}</span>
+                          <span className="text-neutral-400 text-[11px]">{rev.date}</span>
                         </div>
                         <div className="flex text-gold">
                           {[...Array(rev.rating)].map((_, i) => (
@@ -876,7 +878,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
         <div className="fixed inset-0 z-50 bg-black/95 flex flex-col justify-between p-4 sm:p-8 animate-fadeIn">
           {/* Top Bar */}
           <div className="flex items-center justify-between text-white z-10">
-            <span className="text-xs font-mono text-brand font-bold">
+            <span className="text-xs text-brand font-bold">
               {activeImgIndex + 1} / {galleryImages.length}
             </span>
 

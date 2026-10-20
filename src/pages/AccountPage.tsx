@@ -162,7 +162,7 @@ export const AccountPage: React.FC = () => {
                     <div className="flex items-center gap-1.5">
                       {item.badge !== undefined && item.badge > 0 && (
                         <span
-                          className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                             isActive
                               ? 'bg-brand text-ink'
                               : 'bg-[#F4F2EF] text-neutral-600'
@@ -255,7 +255,7 @@ export const AccountPage: React.FC = () => {
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-ink/10 gap-2 text-xs">
                           <div>
                             <span className="text-neutral-400">Numéro de Commande</span>
-                            <p className="font-mono font-bold text-sm text-ink">
+                            <p className="font-bold text-sm text-ink">
                               #{order.orderId}
                             </p>
                             <span className="text-neutral-400 font-light">{order.date}</span>
@@ -282,7 +282,7 @@ export const AccountPage: React.FC = () => {
 
                           <div className="text-right">
                             <span className="text-neutral-400">Montant Total :</span>
-                            <p className="font-mono font-extrabold text-base text-ink">
+                            <p className="font-extrabold text-base text-ink">
                               {formatPrice(order.totalAmount)}
                             </p>
                           </div>
@@ -344,7 +344,7 @@ export const AccountPage: React.FC = () => {
                       value={trackingSearch}
                       onChange={(e) => setTrackingSearch(e.target.value)}
                       placeholder="Entrez votre N° de commande (ex: LB-782910)"
-                      className="w-full pl-9 pr-3 py-2.5 text-xs bg-porcelain border border-ink/10 rounded-xl focus:outline-none focus:border-brand font-mono uppercase"
+                      className="w-full pl-9 pr-3 py-2.5 text-xs bg-porcelain border border-ink/10 rounded-xl focus:outline-none focus:border-brand uppercase"
                     />
                   </div>
                   <button
@@ -360,11 +360,11 @@ export const AccountPage: React.FC = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-ink/10 pb-3">
                       <div>
                         <span className="text-neutral-400">Commande suivie</span>
-                        <p className="font-mono font-bold text-base text-ink">
+                        <p className="font-bold text-base text-ink">
                           #{selectedOrderForTracking.orderId}
                         </p>
                       </div>
-                      <span className="font-mono font-bold text-sm text-ink">
+                      <span className="font-bold text-sm text-ink">
                         Total : {formatPrice(selectedOrderForTracking.totalAmount)}
                       </span>
                     </div>
@@ -520,7 +520,7 @@ export const AccountPage: React.FC = () => {
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-ink">{rev.productName}</span>
-                          <span className="text-neutral-400 font-mono text-[11px]">{rev.date}</span>
+                          <span className="text-neutral-400 text-[11px]">{rev.date}</span>
                         </div>
                         <div className="flex text-gold">
                           {[...Array(rev.rating)].map((_, i) => (

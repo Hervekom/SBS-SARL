@@ -71,7 +71,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               </h2>
             )}
           </div>
-          <span className="text-xs text-neutral-500 font-mono">
+          <span className="text-xs text-neutral-500">
             {filteredProducts.length} articles disponibles
           </span>
         </div>

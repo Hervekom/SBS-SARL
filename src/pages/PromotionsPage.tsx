@@ -34,7 +34,7 @@ export const PromotionsPage: React.FC = () => {
               <div className="bg-black border border-[#333333] px-4 py-2.5 rounded-xl flex items-center gap-3">
                 <Tag className="w-4 h-4 text-brand" />
                 <span className="text-xs text-neutral-300">
-                  Code additionnel -10% : <strong className="text-gold font-mono">SBS10</strong>
+                  Code additionnel -10% : <strong className="text-gold">SBS10</strong>
                 </span>
               </div>
             </div>

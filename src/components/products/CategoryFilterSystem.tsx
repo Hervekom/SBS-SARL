@@ -119,7 +119,7 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
 
       {/* Filtres actifs */}
       <div className="flex flex-wrap items-center gap-1.5 px-1 text-xs">
-        <span className="text-neutral-500 font-mono text-[11px] mr-1">
+        <span className="text-neutral-500 text-[11px] mr-1">
           {totalResults} {totalResults > 1 ? 'articles trouvés' : 'article trouvé'}
         </span>
 
@@ -160,8 +160,8 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
         <div className="fixed inset-0 z-50 overflow-hidden">
           <div onClick={() => setDrawerOpen(false)} className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity" />
 
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-            <div className="w-screen max-w-md bg-porcelain shadow-2xl flex flex-col justify-between border-l border-ink/10 animate-slide-down">
+          <div className="fixed inset-y-0 right-0 w-[min(100%,28rem)] flex">
+            <div className="w-full bg-porcelain shadow-2xl flex flex-col justify-between border-l border-ink/10 animate-slide-down">
               <div className="p-5 border-b border-ink/10 flex items-center justify-between bg-white">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-4 h-4 text-brand" />

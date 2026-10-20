@@ -101,7 +101,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
       {/* ======================================================== */}
       {/* INFORMATIONS PRODUIT                                     */}
       {/* ======================================================== */}
-      <div className="p-3.5 sm:p-4 space-y-1.5 flex-1 flex flex-col justify-between text-left">
+      <div className="p-3 sm:p-4 space-y-1.5 flex-1 flex flex-col justify-between text-left">
         <div>
           {/* Catégorie & Note */}
           <div className="flex items-center justify-between text-[11px] text-neutral-500 mb-1">
@@ -138,16 +138,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
         {/* ======================================================== */}
         {/* PRIX (FCFA) & BOUTON PANIER                               */}
         {/* ======================================================== */}
-        <div className="pt-3 mt-2 flex items-end justify-between gap-2">
-          <div className="min-w-0">
+        <div className="pt-3 mt-2 flex flex-wrap items-end justify-between gap-2">
+          <div>
             {/* Prix actuel */}
-            <span className="text-sm sm:text-base font-bold text-ink tabular-nums block truncate">
+            <span className="text-[13px] sm:text-base font-bold text-ink tabular-nums block whitespace-nowrap">
               {formatPrice(product.price)}
             </span>
             
             {/* Ancien prix si promotion */}
             {(product.original_price || product.originalPrice) && (
-              <span className="text-[11px] sm:text-xs text-ink/40 line-through tabular-nums block">
+              <span className="text-[11px] sm:text-xs text-ink/40 line-through tabular-nums block whitespace-nowrap">
                 {formatPrice(product.original_price || product.originalPrice!)}
               </span>
             )}
@@ -160,7 +160,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
               if (product.options?.length) navigate(`/produit/${product.slug}`);
               else addToCart(product, 1);
             }}
-            className="w-9 h-9 rounded-full bg-ink hover:bg-brand text-white flex items-center justify-center transition-colors duration-200 cursor-pointer shrink-0"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-ink hover:bg-brand text-white flex items-center justify-center transition-colors duration-200 cursor-pointer shrink-0"
             title="Ajouter au panier"
             aria-label={`Ajouter ${product.name} au panier`}
           >

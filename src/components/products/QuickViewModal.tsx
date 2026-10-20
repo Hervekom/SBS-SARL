@@ -83,7 +83,7 @@ export const QuickViewModal: React.FC = () => {
                     />
                   ))}
                 </div>
-                <span className="text-xs font-mono tabular-nums text-neutral-700 font-semibold">
+                <span className="text-xs tabular-nums text-neutral-700 font-semibold">
                   {quickViewProduct.rating.toFixed(1)}
                 </span>
                 <span className="text-xs text-neutral-400">({quickViewProduct.reviewCount} avis)</span>
@@ -91,11 +91,11 @@ export const QuickViewModal: React.FC = () => {
 
               {/* Price */}
               <div className="flex items-baseline gap-3">
-                <span className="text-2xl font-extrabold text-ink font-mono tabular-nums">
+                <span className="text-2xl font-extrabold text-ink tabular-nums">
                   {formatPrice(quickViewProduct.price)}
                 </span>
                 {quickViewProduct.originalPrice && (
-                  <span className="text-sm text-neutral-400 line-through font-mono tabular-nums">
+                  <span className="text-sm text-neutral-400 line-through tabular-nums">
                     {formatPrice(quickViewProduct.originalPrice)}
                   </span>
                 )}
@@ -115,7 +115,7 @@ export const QuickViewModal: React.FC = () => {
                     >
                       -
                     </button>
-                    <span className="px-3 text-xs font-mono font-bold">{quantity}</span>
+                    <span className="px-3 text-xs font-bold">{quantity}</span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
                       className="px-2 py-1 text-xs font-bold hover:text-brand"

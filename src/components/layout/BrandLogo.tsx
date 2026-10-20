@@ -29,7 +29,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ className = '', size = 'md
         <span className={`${titleSize} font-extrabold tracking-tight ${isLight ? 'text-white' : 'text-ink'}`}>
           SBS<span className="text-brand"> SARL</span>
         </span>
-        <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.22em] mt-1 ${isLight ? 'text-gold-light' : 'text-gold'}`}>
+        <span className={`hidden min-[360px]:block text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.18em] sm:tracking-[0.22em] mt-1 whitespace-nowrap ${isLight ? 'text-gold-light' : 'text-gold'}`}>
           Smart Business Services
         </span>
       </span>

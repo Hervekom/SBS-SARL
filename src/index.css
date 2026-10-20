@@ -33,6 +33,31 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* ---- Adaptation à tous les écrans ---- */
+  html {
+    overflow-x: clip;               /* aucune barre de défilement horizontale */
+    -webkit-text-size-adjust: 100%; /* pas d'agrandissement auto du texte (iOS) */
+    text-size-adjust: 100%;
+  }
+  img, video, canvas {
+    max-width: 100%;
+  }
+  fieldset {
+    min-width: 0;                   /* un fieldset ne doit jamais élargir la page */
+  }
+  .grid > * {
+    min-width: 0;
+  }
+  /* iOS zoome sur les champs < 16 px : on garde 16 px sur téléphone et tablette */
+  @media (max-width: 1023px), (hover: none) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   h1, h2 {
     font-family: var(--font-display);
     font-weight: 600;

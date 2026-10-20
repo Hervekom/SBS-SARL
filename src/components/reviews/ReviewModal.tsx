@@ -107,7 +107,7 @@ export const ReviewModal: React.FC = () => {
                     />
                   </button>
                 ))}
-                <span className="ml-2 font-mono font-bold text-sm text-ink">
+                <span className="ml-2 font-bold text-sm text-ink">
                   {rating} / 5
                 </span>
               </div>
