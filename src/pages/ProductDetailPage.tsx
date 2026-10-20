@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useSeo } from '../lib/seo';
 import { useShop, useCatalog } from '../context/ShopContext';
-import { CATEGORIES, heroBannerImg, SHOP, whatsappLink } from '../data/products';
+import { CATEGORIES, heroBannerImg, SHOP, SITE_URL, whatsappLink } from '../data/products';
 import { ProductCard } from '../components/products/ProductCard';
+import { Product } from '../types';
 import {
   ChevronRight,
   ChevronLeft,
@@ -40,6 +42,30 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
   const product = PRODUCTS.find((p) => p.slug === slug) || PRODUCTS[0];
   const category = CATEGORIES.find((c) => c.id === (product.category_id || product.category));
+  useSeo({
+    title: `${product.name} – ${new Intl.NumberFormat('fr-FR').format(product.price)} FCFA`,
+    description: `${product.short_description || product.description} Livraison à Douala, paiement à la livraison ou Mobile Money.`.slice(0, 300),
+    path: `/produit/${product.slug}`,
+    image: product.image_url,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      image: [product.image_url?.startsWith('http') ? product.image_url : `${SITE_URL}${product.image_url}`],
+      description: product.description,
+      sku: product.id,
+      brand: product.brand ? { '@type': 'Brand', name: product.brand } : undefined,
+      offers: {
+        '@type': 'Offer',
+        url: `${SITE_URL}/produit/${product.slug}`,
+        priceCurrency: 'XAF',
+        price: product.price,
+        availability: product.in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        itemCondition: 'https://schema.org/NewCondition',
+        seller: { '@type': 'Organization', name: 'Smart Business Services SARL' },
+      },
+    },
+  });
   const relatedProducts = PRODUCTS.filter(
     (p) => (p.category_id || p.category) === (product.category_id || product.category) && p.id !== product.id
   ).slice(0, 4);
@@ -66,6 +92,66 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+
+  // ---- Variantes (stockage, couleur, modèle…) ----
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() =>
+    Object.fromEntries((product.options || []).map((o) => [o.name, o.values[0]?.label]))
+  );
+  const optionDelta = (product.options || []).reduce((sum, o) => {
+    const v = o.values.find((x) => x.label === selectedOptions[o.name]);
+    return sum + (v?.delta || 0);
+  }, 0);
+  const unitPrice = product.price + optionDelta;
+  const unitOldPrice = (product.original_price || product.originalPrice) ? (product.original_price || product.originalPrice)! + optionDelta : undefined;
+  const variantLabel = (product.options || []).map((o) => selectedOptions[o.name]).filter(Boolean).join(' · ');
+  const cartProduct: Product = variantLabel
+    ? {
+        ...product,
+        id: `${product.id}__${variantLabel.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+        parentId: product.id,
+        price: unitPrice,
+        original_price: unitOldPrice,
+        originalPrice: unitOldPrice,
+      }
+    : product;
+
+  // ---- « Complétez votre achat » (téléphones uniquement) ----
+  const bundle = useMemo(() => {
+    if ((product.category_id || product.category) !== 'smartphones') return [];
+    const caseId =
+      product.brand === 'Apple' ? 'prod-coque-magsafe' : product.brand === 'Samsung' ? 'prod-pochette-cuir' : 'prod-coque-antichoc';
+    const chargerId = product.brand === 'Samsung' ? 'prod-chargeur-samsung-25w' : 'prod-chargeur-auto-38w';
+    return ['prod-verre-trempe-9d', caseId, chargerId]
+      .map((id) => PRODUCTS.find((p) => p.id === id))
+      .filter((p): p is Product => Boolean(p));
+  }, [product, PRODUCTS]);
+  const [bundlePicked, setBundlePicked] = useState<Record<string, boolean>>({});
+  const isPicked = (id: string) => bundlePicked[id] !== false;
+  const bundleTotal = bundle.filter((b) => isPicked(b.id)).reduce((s2, b) => s2 + b.price, 0);
+  /** Choisit automatiquement la variante d'accessoire adaptée au téléphone (modèle, marque…). */
+  const bundleVariant = (b: Product): string | undefined => {
+    if (!b.options?.length) return undefined;
+    const name = product.name.toLowerCase();
+    return b.options
+      .map((o) => {
+        const byName = [...o.values].sort((x, y) => y.label.length - x.label.length).find((v) => name.includes(v.label.toLowerCase()));
+        const byBrand = o.values.find((v) =>
+          v.label.toLowerCase().startsWith((product.brand === 'Apple' ? 'iphone' : product.brand || '').toLowerCase())
+        );
+        return (byName || byBrand || o.values[0]).label;
+      })
+      .join(' · ');
+  };
+  const addBundle = () => {
+    addToCart(cartProduct, quantity, variantLabel || undefined);
+    bundle
+      .filter((b) => isPicked(b.id))
+      .forEach((b) => {
+        const v = bundleVariant(b);
+        addToCart(v ? { ...b, id: `${b.id}__${v.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, parentId: b.id } : b, 1, v);
+      });
+    setIsCartDrawerOpen(true);
+  };
   const [activeTab, setActiveTab] = useState<'desc' | 'specs' | 'shipping' | 'returns' | 'reviews'>('desc');
   const [openMobileAccordions, setOpenMobileAccordions] = useState<Record<string, boolean>>({
     desc: true,
@@ -113,13 +199,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
   // Add to cart
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    addToCart(cartProduct, quantity, variantLabel || undefined);
     setIsCartDrawerOpen(true);
   };
 
   // Buy Now (Immediate Checkout)
   const handleBuyNow = () => {
-    addToCart(product, quantity);
+    addToCart(cartProduct, quantity, variantLabel || undefined);
     navigate('/checkout');
   };
 
@@ -335,8 +421,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                   Prix SBS
                 </span>
                 <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-ink font-mono tabular-nums">
-                    {formatPrice(product.price)}
+                  <span className="text-2xl font-bold text-ink tabular-nums whitespace-nowrap">
+                    {formatPrice(unitPrice)}
                   </span>
                 </div>
               </div>
@@ -344,10 +430,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               {(product.original_price || product.originalPrice) && (
                 <div className="text-right">
                   <span className="text-xs text-neutral-400 line-through font-mono tabular-nums block">
-                    {formatPrice(product.original_price || product.originalPrice!)}
+                    {formatPrice(unitOldPrice!)}
                   </span>
-                  <span className="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-100 mt-0.5 inline-block">
-                    Économisez {formatPrice((product.original_price || product.originalPrice!) - product.price)}
+                  <span className="text-[11px] font-bold text-brand-dark bg-blush px-2 py-0.5 rounded-md mt-0.5 inline-block">
+                    Économisez {formatPrice(unitOldPrice! - unitPrice)}
                   </span>
                 </div>
               )}
@@ -357,6 +443,38 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             <p className="text-xs sm:text-sm text-neutral-600 font-light leading-relaxed">
               {product.description}
             </p>
+
+            {/* Variantes */}
+            {(product.options || []).map((opt) => (
+              <div key={opt.name}>
+                <p className="text-sm font-semibold">
+                  {opt.name} : <span className="font-normal text-ink/60">{selectedOptions[opt.name]}</span>
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {opt.values.map((v) => {
+                    const active = selectedOptions[opt.name] === v.label;
+                    return (
+                      <button
+                        key={v.label}
+                        type="button"
+                        onClick={() => setSelectedOptions((prev) => ({ ...prev, [opt.name]: v.label }))}
+                        className={`px-3.5 py-2 rounded-xl border text-sm transition-colors cursor-pointer ${
+                          active ? 'border-ink bg-ink text-white' : 'border-ink/15 hover:border-ink/40 bg-white'
+                        }`}
+                      >
+                        {v.label}
+                        {!!v.delta && (
+                          <span className={`ml-1.5 text-xs ${active ? 'text-white/70' : 'text-ink/45'}`}>
+                            {v.delta > 0 ? '+' : '−'}
+                            {formatPrice(Math.abs(v.delta))}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
 
             {/* 6. Quantité + Boutons d'Action */}
             <div className="space-y-3 pt-2">
@@ -405,9 +523,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               {/* Commande directe par WhatsApp */}
               <a
                 href={whatsappLink(
-                  `Bonjour SBS SARL, je souhaite commander : ${product.name} (Qté : ${quantity}, Prix : ${formatPrice(
-                    product.price * quantity
-                  )}).`
+                  `Bonjour SBS SARL, je souhaite commander : ${product.name}${variantLabel ? ` (${variantLabel})` : ''} – Qté : ${quantity}, Prix : ${formatPrice(
+                    unitPrice * quantity
+                  )}.`
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -416,6 +534,40 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                 <MessageCircle className="w-4 h-4 fill-white" />
                 <span>Commander sur WhatsApp</span>
               </a>
+
+              {/* Complétez votre achat */}
+              {bundle.length > 0 && (
+                <div className="mt-2 rounded-2xl border border-ink/10 bg-white p-4">
+                  <p className="font-display text-lg font-semibold">Complétez votre achat</p>
+                  <p className="text-xs text-ink/55">Protégez et rechargez votre téléphone dès le premier jour.</p>
+                  <ul className="mt-3 space-y-2">
+                    {bundle.map((b) => (
+                      <li key={b.id}>
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={isPicked(b.id)}
+                            onChange={(e) => setBundlePicked((prev) => ({ ...prev, [b.id]: e.target.checked }))}
+                            className="w-4 h-4 accent-[#F26B1D]"
+                          />
+                          <img src={b.image} alt="" className="w-10 h-10 rounded-lg object-cover bg-[#F4F2EF]" />
+                          <span className="flex-1 min-w-0 text-sm leading-snug">
+                            <span className="line-clamp-1">{b.name}</span>
+                            {bundleVariant(b) && <span className="block text-xs text-ink/50">{bundleVariant(b)}</span>}
+                          </span>
+                          <span className="text-sm font-semibold tabular-nums">{formatPrice(b.price)}</span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={addBundle}
+                    className="mt-3 w-full rounded-xl bg-brand hover:bg-brand-hover text-white text-sm font-semibold py-3 transition-colors cursor-pointer"
+                  >
+                    Ajouter le téléphone {bundleTotal > 0 && `+ accessoires (${formatPrice(bundleTotal)})`}
+                  </button>
+                </div>
+              )}
 
               {/* Partage & Référence */}
               <div className="flex items-center justify-between text-xs text-neutral-500 pt-1">

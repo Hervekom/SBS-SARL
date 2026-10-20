@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useSeo } from '../lib/seo';
 import { CategoryId } from '../types';
 import { CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/products/ProductCard';
@@ -51,6 +52,7 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId }) => {
   };
 
   const meta = pageMeta[categoryId] || pageMeta.smartphones;
+  useSeo({ title: `${meta.title} à Douala`, description: `${meta.subtitle} Prix en FCFA, livraison 24 h à Douala, paiement à la livraison.`, path: `/${categoryId}` });
   const categoryInfo = CATEGORIES.find((c) => c.id === categoryId) || CATEGORIES[0];
 
   // Base products for this category

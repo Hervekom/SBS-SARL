@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useSeo } from '../lib/seo';
 import {
   Check,
   ChevronRight,
@@ -89,6 +90,11 @@ const FAQ = [
 export const HomePage: React.FC = () => {
   const { navigate, formatPrice, setSearchQuery, setIsSearchOpen, reviews } = useShop();
   const PRODUCTS = useCatalog();
+  useSeo({
+    title: 'SBS SARL | Téléphones, accessoires & gadgets électroniques à Douala',
+    description: 'Smartphones neufs (iPhone, Samsung, Tecno, Infinix, Xiaomi), coques, verres trempés, montres connectées et chargeurs à Douala. Livraison 24 h, paiement à la livraison ou Mobile Money.',
+    path: '/',
+  });
   const [tab, setTab] = useState<CategoryId | 'top'>('top');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [heroSearch, setHeroSearch] = useState('');

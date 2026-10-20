@@ -15,8 +15,8 @@ export const CartDrawer: React.FC = () => {
     navigate,
   } = useShop();
 
-  const [promoCode, setPromoCode] = useState('');
-  const [discountPercent, setDiscountPercent] = useState(0);
+  const { promoCode, discountPercent, discountAmount, applyPromo } = useShop();
+  const [promoInput, setPromoInput] = useState(promoCode);
   const [promoMsg, setPromoMsg] = useState<{ text: string; error?: boolean } | null>(null);
 
   if (!isCartDrawerOpen) return null;
@@ -26,14 +26,12 @@ export const CartDrawer: React.FC = () => {
   const progressToFreeShipping = Math.min(100, (cartTotal / FREE_SHIPPING_THRESHOLD) * 100);
   const amountLeftForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - cartTotal);
 
-  const discountAmount = (cartTotal * discountPercent) / 100;
   const finalTotal = cartTotal - discountAmount;
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === 'SBS10') {
-      setDiscountPercent(10);
-      setPromoMsg({ text: 'Code SBS10 appliqué : -10% de réduction !' });
+    if (applyPromo(promoInput)) {
+      setPromoMsg({ text: `Code ${promoInput.trim().toUpperCase()} appliqué : réduction ajoutée à votre commande.` });
     } else {
       setPromoMsg({ text: 'Code invalide ou expiré', error: true });
     }
@@ -114,8 +112,8 @@ export const CartDrawer: React.FC = () => {
                     <h4 className="text-xs font-bold text-ink line-clamp-1 leading-snug">
                       {item.product.name}
                     </h4>
-                    <p className="text-[11px] text-brand-dark font-medium uppercase mt-0.5">
-                      {item.product.subCategory}
+                    <p className="text-[11px] text-brand-dark font-medium mt-0.5">
+                      {item.selectedVariant || item.product.subCategory}
                     </p>
 
                     <div className="flex items-center justify-between mt-2.5">
@@ -187,8 +185,8 @@ export const CartDrawer: React.FC = () => {
                   <Tag className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                   <input
                     type="text"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value)}
                     placeholder="Code promo (ex: SBS10)"
                     className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#F4F2EF] border border-ink/10 rounded-lg focus:outline-none focus:border-brand uppercase font-mono"
                   />
@@ -225,7 +223,7 @@ export const CartDrawer: React.FC = () => {
                 )}
                 <div className="flex justify-between text-neutral-600">
                   <span>Livraison</span>
-                  <span>{amountLeftForFreeShipping === 0 ? 'Gratuite' : 'Calculée au checkout'}</span>
+                  <span>{amountLeftForFreeShipping === 0 ? 'Offerte à Douala' : 'Selon la zone'}</span>
                 </div>
                 <div className="pt-2 border-t border-ink/10 flex justify-between text-sm font-bold text-ink">
                   <span>Total estimé</span>

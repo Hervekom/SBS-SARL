@@ -7,6 +7,7 @@ import React from 'react';
 import { ShopProvider, useShop, useCatalog } from './context/ShopContext';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
+import { MobileNav } from './components/layout/MobileNav';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { QuickViewModal } from './components/products/QuickViewModal';
 import { ReviewModal } from './components/reviews/ReviewModal';
@@ -18,7 +19,8 @@ import { CartPage } from './pages/CartPage';
 import { WishlistPage } from './pages/WishlistPage';
 import { AccountPage } from './pages/AccountPage';
 import { CheckoutPage } from './pages/CheckoutPage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
+import { AdminPage } from './pages/AdminPage';
+import { TrackingPage } from './pages/TrackingPage';
 import { ProductGrid } from './components/products/ProductGrid';
 import { CATEGORIES } from './data/products';
 import { SearchX, X } from 'lucide-react';
@@ -71,7 +73,7 @@ const MainContent: React.FC = () => {
     const slug = cleanPath.replace('/produit/', '');
     return (
       <main className="min-h-screen">
-        <ProductDetailPage slug={slug} />
+        <ProductDetailPage key={slug} slug={slug} />
       </main>
     );
   }
@@ -131,11 +133,19 @@ const MainContent: React.FC = () => {
     );
   }
 
+  if (cleanPath === '/suivi') {
+    return (
+      <main className="min-h-screen">
+        <TrackingPage />
+      </main>
+    );
+  }
+
   // Admin route
   if (cleanPath === '/admin') {
     return (
       <main className="min-h-screen">
-        <AdminDashboardPage />
+        <AdminPage />
       </main>
     );
   }
@@ -160,6 +170,9 @@ const Shell: React.FC = () => {
         <MainContent />
       </div>
       <Footer />
+      <MobileNav />
+      {/* Espace pour la barre mobile fixe */}
+      <div className="h-16 lg:hidden bg-ink" aria-hidden="true" />
       <CartDrawer />
       <QuickViewModal />
       <ReviewModal />

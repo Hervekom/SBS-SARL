@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { CartItem, Currency, Product, Review, Order } from '../types';
-import { PRODUCTS, REVIEWS } from '../data/products';
+import { PRODUCTS, REVIEWS, PROMO_CODES } from '../data/products';
 import { HomepageConfig, defaultHomepageConfig, fetchProducts, fetchReviews, submitReview, isSupabaseConfigured } from '../lib/supabase';
 
 interface ShopContextType {
@@ -62,6 +62,13 @@ interface ShopContextType {
 
   // Source des données
   isLiveData: boolean;
+
+  // Code promo (partagé panier → paiement)
+  promoCode: string;
+  discountPercent: number;
+  discountAmount: number;
+  applyPromo: (code: string) => boolean;
+  clearPromo: () => void;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -191,6 +198,18 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewTargetOrder, setReviewTargetOrder] = useState<Order | null>(null);
   const [isLiveData, setIsLiveData] = useState(false);
+  const [promoCode, setPromoCode] = useState('');
+  const discountPercent = promoCode ? PROMO_CODES[promoCode] ?? 0 : 0;
+
+  const applyPromo = (code: string) => {
+    const c = code.trim().toUpperCase();
+    if (PROMO_CODES[c]) {
+      setPromoCode(c);
+      return true;
+    }
+    return false;
+  };
+  const clearPromo = () => setPromoCode('');
 
   // Chargement du catalogue et des avis depuis Supabase (si configuré)
   useEffect(() => {
@@ -363,6 +382,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const cartTotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const discountAmount = Math.round((cartTotal * discountPercent) / 100);
 
   const toggleWishlist = (productId: string) => {
     setWishlist((prev) =>
@@ -483,6 +503,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         reviewTargetOrder,
         setReviewTargetOrder,
         isLiveData,
+        promoCode,
+        discountPercent,
+        discountAmount,
+        applyPromo,
+        clearPromo,
       }}
     >
       {children}

@@ -49,6 +49,16 @@ export interface Product {
   // Attributs de filtrage (ex: { Stockage: '256 Go', Compatibilité: 'iPhone' })
   attributes?: Record<string, string>;
   condition?: string;
+
+  /** Options de variante (ex: Stockage, Couleur) — delta = écart de prix en FCFA */
+  options?: ProductOption[];
+  /** Pour une ligne de panier issue d'une variante : id du produit d'origine */
+  parentId?: string;
+}
+
+export interface ProductOption {
+  name: string;
+  values: { label: string; delta?: number }[];
 }
 
 export interface CartItem {
@@ -85,10 +95,16 @@ export interface Order {
   paymentMethod: string;
   items: CartItem[];
   totalAmount: number;
-  status: 'En préparation' | 'En transit' | 'Livrée et reçue';
+  status: OrderStatus;
   deliveredAt?: string;
   hasReviewed?: boolean;
+  subtotal?: number;
+  shippingFee?: number;
+  discountAmount?: number;
+  promoCode?: string;
 }
+
+export type OrderStatus = 'En préparation' | 'En transit' | 'Livrée et reçue' | 'Annulée';
 
 export interface CategoryMeta {
   id: CategoryId;

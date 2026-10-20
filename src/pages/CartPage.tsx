@@ -14,19 +14,16 @@ export const CartPage: React.FC = () => {
     navigate,
   } = useShop();
 
-  const [promoCode, setPromoCode] = useState('');
-  const [discountPercent, setDiscountPercent] = useState(0);
+  const { promoCode, discountPercent, discountAmount, applyPromo } = useShop();
+  const [promoInput, setPromoInput] = useState(promoCode);
   const [promoMsg, setPromoMsg] = useState<{ text: string; error?: boolean } | null>(null);
 
-  const discountAmount = (cartTotal * discountPercent) / 100;
-  const shippingFee = cartTotal >= 50000 || cartTotal === 0 ? 0 : 2000;
-  const finalTotal = cartTotal - discountAmount + shippingFee;
+  const finalTotal = cartTotal - discountAmount;
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === 'SBS10') {
-      setDiscountPercent(10);
-      setPromoMsg({ text: 'Code SBS10 appliqué : -10% de réduction !' });
+    if (applyPromo(promoInput)) {
+      setPromoMsg({ text: `Code ${promoInput.trim().toUpperCase()} appliqué : réduction ajoutée à votre commande.` });
     } else {
       setPromoMsg({ text: 'Code promotionnel invalide ou expiré.', error: true });
     }
@@ -79,7 +76,8 @@ export const CartPage: React.FC = () => {
                       >
                         {item.product.name}
                       </h3>
-                      <p className="text-xs text-neutral-500 font-mono mt-1">
+                      {item.selectedVariant && <p className="text-xs text-brand-dark mt-0.5">{item.selectedVariant}</p>}
+                      <p className="text-xs text-neutral-500 mt-1">
                         Prix unitaire : {formatPrice(item.product.price)}
                       </p>
                     </div>
@@ -131,8 +129,8 @@ export const CartPage: React.FC = () => {
                     <Tag className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                     <input
                       type="text"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
+                      value={promoInput}
+                      onChange={(e) => setPromoInput(e.target.value)}
                       placeholder="Code (ex: SBS10)"
                       className="w-full pl-9 pr-3 py-2 text-xs bg-[#F4F2EF] border border-ink/10 rounded-xl focus:outline-none focus:border-brand uppercase font-mono"
                     />
@@ -170,14 +168,14 @@ export const CartPage: React.FC = () => {
                 <div className="flex justify-between">
                   <span>Frais de livraison</span>
                   <span className="font-mono tabular-nums text-ink">
-                    {shippingFee === 0 ? 'Gratuite' : formatPrice(shippingFee)}
+                    Selon la zone (étape suivante)
                   </span>
                 </div>
               </div>
 
               {/* Total */}
               <div className="flex items-baseline justify-between">
-                <span className="text-sm font-bold text-ink">Montant Total</span>
+                <span className="text-sm font-bold text-ink">Total hors livraison</span>
                 <span className="text-xl font-extrabold text-ink font-mono tabular-nums">
                   {formatPrice(finalTotal)}
                 </span>

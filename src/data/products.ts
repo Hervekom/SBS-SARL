@@ -32,26 +32,86 @@ const imgSupport = '/images/prod-support-voiture-mag.svg';
 const imgCable = '/images/prod-cable-usbc-lightning.svg';
 const imgEnceinte = '/images/prod-enceinte-flip.svg';
 
-import { CategoryId, CategoryMeta, Product, Review } from '../types';
+import { CategoryId, CategoryMeta, Product, ProductOption, Review } from '../types';
 
 export { heroBannerImg, catSmartphonesImg, catProtectionImg, catMontresImg, catChargeursImg };
 
 // ---------------------------------------------------------------------------
-// Coordonnées boutique (à confirmer avec SBS SARL)
+// Coordonnées boutique (source : page Facebook officielle SBS)
 // ---------------------------------------------------------------------------
 export const SHOP = {
   name: 'Smart Business Services SARL',
   shortName: 'SBS SARL',
   city: 'Douala',
   country: 'Cameroun',
-  address: 'Douala, Cameroun',
-  phoneDisplay: '+237 6XX XX XX XX',
-  whatsappNumber: '237600000000', // à remplacer par le vrai numéro WhatsApp
+  address: 'Akwa, Douala, Cameroun',
+  phoneDisplay: '+237 6 71 70 84 75',
+  email: 'mbobda24@gmail.com',
+  whatsappNumber: '237671708475', // numéro de la page Facebook SBS
   hours: 'Lundi – Samedi : 08h00 – 20h00',
   facebook: 'https://www.facebook.com/people/Smart-Business-Services-Sarl/100083006185249/',
   promoCode: 'SBS10',
   freeShippingThreshold: 50000,
   shippingFee: 2000,
+};
+
+export const SITE_URL = 'https://sbs-sarl.vercel.app';
+
+/** Codes promo acceptés (le pourcentage est appliqué au sous-total). */
+export const PROMO_CODES: Record<string, number> = { [SHOP.promoCode]: 10 };
+
+/** Zones de livraison et frais (FCFA). freeAbove : livraison offerte au-delà de ce sous-total. */
+export interface ShippingZone {
+  id: string;
+  label: string;
+  detail: string;
+  fee: number;
+  freeAbove?: number;
+  delay: string;
+  cashOnDelivery: boolean;
+}
+
+export const SHIPPING_ZONES: ShippingZone[] = [
+  {
+    id: 'retrait',
+    label: 'Retrait en boutique (Akwa)',
+    detail: 'Disponible le jour même, pose du verre trempé offerte.',
+    fee: 0,
+    delay: 'Jour même',
+    cashOnDelivery: true,
+  },
+  {
+    id: 'douala-centre',
+    label: 'Douala – centre',
+    detail: 'Akwa, Bonanjo, Bonapriso, Deido, Bali, New Bell, Bépanda…',
+    fee: 1500,
+    freeAbove: 50000,
+    delay: 'Sous 24 h',
+    cashOnDelivery: true,
+  },
+  {
+    id: 'douala-peripherie',
+    label: 'Douala – périphérie',
+    detail: 'Bonabéri, Logbaba, Yassa, PK8–PK21, Japoma, Makepe…',
+    fee: 2500,
+    freeAbove: 50000,
+    delay: 'Sous 24 à 48 h',
+    cashOnDelivery: true,
+  },
+  {
+    id: 'autres-villes',
+    label: 'Autres villes du Cameroun',
+    detail: 'Yaoundé, Bafoussam, Kribi, Buea… par agence de voyage, paiement Mobile Money avant envoi.',
+    fee: 3000,
+    delay: '24 à 72 h',
+    cashOnDelivery: false,
+  },
+];
+
+export const shippingFeeFor = (zoneId: string, subtotal: number): number => {
+  const z = SHIPPING_ZONES.find((x) => x.id === zoneId);
+  if (!z || subtotal === 0) return 0;
+  return z.freeAbove !== undefined && subtotal >= z.freeAbove ? 0 : z.fee;
 };
 
 export const whatsappLink = (text?: string) =>
@@ -147,6 +207,7 @@ interface Seed {
   features: string[];
   specs: Record<string, string>;
   attributes: Record<string, string>;
+  options?: ProductOption[];
   popular?: boolean;
   isNew?: boolean;
   promo?: boolean;
@@ -184,6 +245,7 @@ const mk = (s: Seed): Product => ({
   features: s.features,
   specs: s.specs,
   attributes: { Marque: s.brand, ...s.attributes },
+  options: s.options,
   condition: 'Neuf scellé',
   is_popular: s.popular,
   isBestSeller: s.popular,
@@ -202,7 +264,7 @@ export const PRODUCTS: Product[] = [
   mk({
     id: 'prod-iphone-15-pro-max',
     slug: 'iphone-15-pro-max-256go-titane-naturel',
-    name: 'iPhone 15 Pro Max 256 Go – Titane naturel',
+    name: 'iPhone 15 Pro Max',
     category: 'smartphones',
     sub: 'iPhone',
     brand: 'Apple',
@@ -218,6 +280,7 @@ export const PRODUCTS: Product[] = [
     features: ['Écran Super Retina XDR 6,7" ProMotion 120 Hz', 'Puce A17 Pro', 'Triple caméra 48 Mpx, zoom optique 5x', 'Port USB‑C, Face ID', 'Neuf scellé + facture SBS'],
     specs: { Marque: 'Apple', Écran: '6,7" OLED 120 Hz', Stockage: '256 Go', Caméra: '48 + 12 + 12 Mpx', Batterie: "Jusqu'à 29 h vidéo", État: 'Neuf scellé' },
     attributes: { Stockage: '256 Go', RAM: '8 Go', Réseau: '5G' },
+    options: [{ name: 'Stockage', values: [{ label: '256 Go' }, { label: '512 Go', delta: 100000 }] }, { name: 'Couleur', values: [{ label: 'Titane naturel' }, { label: 'Titane noir' }, { label: 'Titane bleu' }] }],
     popular: true,
     promo: true,
     date: '2026-09-02T10:00:00Z',
@@ -225,7 +288,7 @@ export const PRODUCTS: Product[] = [
   mk({
     id: 'prod-galaxy-s24-ultra',
     slug: 'samsung-galaxy-s24-ultra-256go',
-    name: 'Samsung Galaxy S24 Ultra 256 Go – Titanium Black',
+    name: 'Samsung Galaxy S24 Ultra',
     category: 'smartphones',
     sub: 'Samsung Galaxy S',
     brand: 'Samsung',
@@ -241,6 +304,7 @@ export const PRODUCTS: Product[] = [
     features: ['Écran Dynamic AMOLED 2X 6,8" 120 Hz', 'Caméra principale 200 Mpx', 'S Pen intégré', 'Batterie 5000 mAh, charge 45 W', 'Double SIM'],
     specs: { Marque: 'Samsung', Écran: '6,8" AMOLED 120 Hz', Stockage: '256 Go', RAM: '12 Go', Batterie: '5000 mAh', État: 'Neuf scellé' },
     attributes: { Stockage: '256 Go', RAM: '12 Go', Réseau: '5G' },
+    options: [{ name: 'Stockage', values: [{ label: '256 Go' }, { label: '512 Go', delta: 80000 }] }, { name: 'Couleur', values: [{ label: 'Titanium Black' }, { label: 'Titanium Gray' }, { label: 'Titanium Violet' }] }],
     popular: true,
     promo: true,
     date: '2026-08-20T10:00:00Z',
@@ -248,7 +312,7 @@ export const PRODUCTS: Product[] = [
   mk({
     id: 'prod-galaxy-a55',
     slug: 'samsung-galaxy-a55-5g-128go',
-    name: 'Samsung Galaxy A55 5G 128 Go',
+    name: 'Samsung Galaxy A55 5G',
     category: 'smartphones',
     sub: 'Samsung Galaxy A',
     brand: 'Samsung',
@@ -263,6 +327,7 @@ export const PRODUCTS: Product[] = [
     features: ['Écran Super AMOLED 6,6" 120 Hz', 'Triple caméra 50 Mpx OIS', 'Batterie 5000 mAh', 'Résistant à l’eau IP67'],
     specs: { Marque: 'Samsung', Écran: '6,6" AMOLED', Stockage: '128 Go', RAM: '8 Go', Batterie: '5000 mAh', État: 'Neuf scellé' },
     attributes: { Stockage: '128 Go', RAM: '8 Go', Réseau: '5G' },
+    options: [{ name: 'Stockage', values: [{ label: '128 Go' }, { label: '256 Go', delta: 30000 }] }, { name: 'Couleur', values: [{ label: 'Bleu glacier' }, { label: 'Bleu nuit' }, { label: 'Lilas' }] }],
     popular: true,
     date: '2026-07-10T10:00:00Z',
   }),
@@ -285,6 +350,7 @@ export const PRODUCTS: Product[] = [
     features: ['Écran AMOLED 6,78" 144 Hz', 'Caméra 50 Mpx OIS + selfie 50 Mpx', 'Charge rapide 70 W', '12 Go RAM (+ extension)'],
     specs: { Marque: 'Tecno', Écran: '6,78" AMOLED 144 Hz', Stockage: '256 Go', RAM: '12 Go', Batterie: '5000 mAh', État: 'Neuf scellé' },
     attributes: { Stockage: '256 Go', RAM: '12 Go', Réseau: '5G' },
+    options: [{ name: 'Couleur', values: [{ label: 'Vert émeraude' }, { label: 'Noir' }, { label: 'Blanc' }] }],
     isNew: true,
     date: '2026-10-05T10:00:00Z',
   }),
@@ -306,6 +372,7 @@ export const PRODUCTS: Product[] = [
     features: ['Écran AMOLED incurvé 6,78" 120 Hz', 'Charge 70 W + sans fil MagCharge 20 W', 'Caméra 108 Mpx', 'Haut-parleurs stéréo JBL'],
     specs: { Marque: 'Infinix', Écran: '6,78" AMOLED', Stockage: '256 Go', RAM: '8 Go', Batterie: '5000 mAh', État: 'Neuf scellé' },
     attributes: { Stockage: '256 Go', RAM: '8 Go', Réseau: '4G' },
+    options: [{ name: 'Couleur', values: [{ label: 'Or titane' }, { label: 'Noir' }, { label: 'Vert' }] }],
     popular: true,
     promo: true,
     date: '2026-06-15T10:00:00Z',
@@ -327,6 +394,7 @@ export const PRODUCTS: Product[] = [
     features: ['Caméra 200 Mpx OIS', 'Écran AMOLED 1,5K 120 Hz', 'Charge turbo 67 W', 'Résistant aux éclaboussures IP54'],
     specs: { Marque: 'Xiaomi', Écran: '6,67" AMOLED 1,5K', Stockage: '256 Go', RAM: '8 Go', Batterie: '5000 mAh', État: 'Neuf scellé' },
     attributes: { Stockage: '256 Go', RAM: '8 Go', Réseau: '4G' },
+    options: [{ name: 'Couleur', values: [{ label: 'Violet aurore' }, { label: 'Noir minuit' }, { label: 'Blanc' }] }],
     isNew: true,
     date: '2026-09-25T10:00:00Z',
   }),
@@ -353,6 +421,7 @@ export const PRODUCTS: Product[] = [
     features: ['Compatible charge MagSafe', 'Traitement anti‑jaunissement', 'Bords surélevés écran & caméra', 'Disponible du 13 au 16 Pro Max'],
     specs: { Matière: 'Polycarbonate + TPU', Compatibilité: 'iPhone 13 à 16 (toutes tailles)', Couleur: 'Transparent' },
     attributes: { Type: 'Coque', Compatibilité: 'iPhone' },
+    options: [{ name: 'Modèle', values: [{ label: 'iPhone 13 / 14' }, { label: 'iPhone 15' }, { label: 'iPhone 15 Pro' }, { label: 'iPhone 15 Pro Max' }, { label: 'iPhone 16 / 16 Pro' }, { label: 'iPhone 16 Pro Max' }] }],
     popular: true,
     promo: true,
     date: '2026-08-01T10:00:00Z',
@@ -374,6 +443,7 @@ export const PRODUCTS: Product[] = [
     features: ['Dureté 9H anti‑rayures', 'Colle intégrale : aucune bulle', 'Traitement oléophobe anti‑traces', 'Pose offerte en boutique'],
     specs: { Dureté: '9H', Épaisseur: '0,33 mm', Compatibilité: 'Tous modèles (préciser à la commande)' },
     attributes: { Type: 'Verre trempé', Compatibilité: 'Tous modèles' },
+    options: [{ name: 'Modèle', values: [{ label: 'iPhone' }, { label: 'Samsung Galaxy A' }, { label: 'Samsung Galaxy S' }, { label: 'Tecno' }, { label: 'Infinix' }, { label: 'Xiaomi / Redmi' }, { label: 'Itel / autre' }] }],
     popular: true,
     date: '2026-05-01T10:00:00Z',
   }),
@@ -394,6 +464,7 @@ export const PRODUCTS: Product[] = [
     features: ['Filtre anti‑regard à 30°', 'Dureté 9H', 'Full Glue sans bulles', 'Pose offerte en boutique'],
     specs: { Dureté: '9H', 'Angle de confidentialité': '30°', Compatibilité: 'iPhone, Samsung, Tecno, Infinix' },
     attributes: { Type: 'Verre trempé', Compatibilité: 'Tous modèles' },
+    options: [{ name: 'Modèle', values: [{ label: 'iPhone' }, { label: 'Samsung' }, { label: 'Tecno' }, { label: 'Infinix' }] }],
     isNew: true,
     date: '2026-10-01T10:00:00Z',
   }),
@@ -414,6 +485,7 @@ export const PRODUCTS: Product[] = [
     features: ['Rabat magnétique', '3 porte‑cartes + poche billets', 'Fonction support vidéo', 'Coutures renforcées'],
     specs: { Matière: 'Simili‑cuir premium', Compatibilité: 'Galaxy A15 à A55, S23, S24', Couleurs: 'Marron, Noir' },
     attributes: { Type: 'Pochette', Compatibilité: 'Samsung' },
+    options: [{ name: 'Couleur', values: [{ label: 'Marron' }, { label: 'Noir' }] }],
     date: '2026-07-01T10:00:00Z',
   }),
   mk({
@@ -435,6 +507,7 @@ export const PRODUCTS: Product[] = [
     features: ['Protection chute 2 m', 'Coins à coussin d’air', 'Dos antidérapant', 'Noir ou orange'],
     specs: { Matière: 'TPU + Polycarbonate', Compatibilité: 'Tecno Spark, Camon / Infinix Hot, Note', Couleurs: 'Noir, Orange' },
     attributes: { Type: 'Coque', Compatibilité: 'Tecno / Infinix' },
+    options: [{ name: 'Couleur', values: [{ label: 'Noir' }, { label: 'Orange' }] }],
     promo: true,
     date: '2026-06-01T10:00:00Z',
   }),
@@ -445,7 +518,7 @@ export const PRODUCTS: Product[] = [
   mk({
     id: 'prod-apple-watch-s9',
     slug: 'apple-watch-series-9-45mm',
-    name: 'Apple Watch Series 9 GPS 45 mm',
+    name: 'Apple Watch Series 9 GPS',
     category: 'montres-connectees',
     sub: 'Apple Watch',
     brand: 'Apple',
@@ -460,6 +533,7 @@ export const PRODUCTS: Product[] = [
     features: ['Écran Retina toujours activé 2000 nits', 'ECG, SpO2, suivi du sommeil', 'Geste double‑tap', 'Autonomie 18 h'],
     specs: { Marque: 'Apple', Boîtier: '45 mm aluminium', Compatibilité: 'iPhone uniquement', Étanchéité: '50 m', État: 'Neuf scellé' },
     attributes: { Compatibilité: 'iPhone' },
+    options: [{ name: 'Taille', values: [{ label: '45 mm' }, { label: '41 mm', delta: -20000 }] }],
     popular: true,
     date: '2026-08-10T10:00:00Z',
   }),
@@ -504,6 +578,7 @@ export const PRODUCTS: Product[] = [
     features: ['Écran AMOLED 2,0"', 'Appels Bluetooth', 'Notifications WhatsApp & SMS', 'Autonomie 7 jours'],
     specs: { Écran: '2,0" AMOLED', Compatibilité: 'iPhone & Android', Autonomie: '7 jours', Étanchéité: 'IP67' },
     attributes: { Compatibilité: 'iPhone & Android' },
+    options: [{ name: 'Bracelet', values: [{ label: 'Orange' }, { label: 'Noir' }, { label: 'Blanc' }] }],
     popular: true,
     promo: true,
     date: '2026-09-15T10:00:00Z',
@@ -713,7 +788,7 @@ export const REVIEWS: Review[] = [
     title: 'Téléphone neuf scellé, comme promis',
     content: "Commande passée sur WhatsApp le matin, livré à Akwa l’après‑midi. Le verre trempé a été posé gratuitement. Exemple d’avis à remplacer.",
     verifiedPurchase: false,
-    productName: 'Samsung Galaxy A55 5G 128 Go',
+    productName: 'Samsung Galaxy A55 5G',
   },
   {
     id: 'rev-2',

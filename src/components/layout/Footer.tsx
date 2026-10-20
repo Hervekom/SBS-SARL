@@ -71,7 +71,7 @@ export const Footer: React.FC = () => {
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">Services & aide</h4>
             <ul className="space-y-2 text-xs text-neutral-400">
               <li>
-                <button onClick={() => navigate('/compte')} className="hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => navigate('/suivi')} className="hover:text-white transition-colors cursor-pointer">
                   Suivi de commande
                 </button>
               </li>

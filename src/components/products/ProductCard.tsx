@@ -122,6 +122,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
           </h3>
 
           {/* Description Courte */}
+          {(product.stock ?? product.stock_count ?? 99) > 0 && (product.stock ?? product.stock_count ?? 99) <= 3 && (
+            <p className="text-[11px] font-semibold text-brand-dark mt-1">Plus que {product.stock ?? product.stock_count} en stock</p>
+          )}
+          {(product.stock ?? product.stock_count ?? 1) === 0 && (
+            <p className="text-[11px] font-semibold text-ink/50 mt-1">Rupture de stock</p>
+          )}
           {shortDesc && (
             <p className="text-xs text-ink/55 line-clamp-2 mt-1 leading-relaxed">
               {shortDesc}
@@ -151,7 +157,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
           <button
             onClick={(e) => {
               e.stopPropagation();
-              addToCart(product, 1);
+              if (product.options?.length) navigate(`/produit/${product.slug}`);
+              else addToCart(product, 1);
             }}
             className="w-9 h-9 rounded-full bg-ink hover:bg-brand text-white flex items-center justify-center transition-colors duration-200 cursor-pointer shrink-0"
             title="Ajouter au panier"

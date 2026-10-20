@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import type { CartItem, CategoryId, Order, Product, Review } from '../types';
+import type { CartItem, CategoryId, Order, Product, ProductOption, Review } from '../types';
 
 // ============================================================================
 // SBS SARL - SUPABASE CLIENT INTERFACE
@@ -73,11 +73,12 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
 export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } })
+  ? createClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: true, storageKey: 'sbs-admin-session' } })
   : null;
 
-interface ProductRow {
+export interface ProductRow {
   id: string;
+  options: ProductOption[] | null;
   name: string;
   slug: string;
   category_id: CategoryId;
@@ -104,7 +105,7 @@ interface ProductRow {
   created_at: string;
 }
 
-const rowToProduct = (r: ProductRow): Product => {
+export const rowToProduct = (r: ProductRow): Product => {
   const img = r.image_url || '/images/hero-sbs.svg';
   const old = r.old_price ?? undefined;
   const stock = r.stock ?? 0;
@@ -139,6 +140,7 @@ const rowToProduct = (r: ProductRow): Product => {
     features: r.features ?? [],
     specs: r.specs ?? {},
     attributes: { ...(r.brand ? { Marque: r.brand } : {}), ...(r.attributes ?? {}) },
+    options: r.options ?? undefined,
     is_featured: Boolean(r.is_featured),
     is_popular: Boolean(r.is_best_seller),
     isBestSeller: Boolean(r.is_best_seller),
@@ -211,14 +213,14 @@ export async function submitReview(review: Omit<Review, 'id' | 'date' | 'timesta
   if (error) console.warn('[Supabase] envoi avis :', error.message);
 }
 
-/** Enregistre une commande et ses lignes dans Supabase. */
-export async function submitOrder(order: Order, shippingFee: number) {
-  if (!supabase) return;
-  const subtotal = order.items.reduce((sum: number, i: CartItem) => sum + i.product.price * i.quantity, 0);
+/** Enregistre une commande et ses lignes dans Supabase. Renvoie true si tout est enregistré. */
+export async function submitOrder(order: Order): Promise<boolean> {
+  if (!supabase) return false;
+  const subtotal = order.subtotal ?? order.items.reduce((sum: number, i: CartItem) => sum + i.product.price * i.quantity, 0);
   const { error } = await supabase.from('orders').insert({
     id: order.orderId,
     customer_name: order.customerName,
-    email: order.email,
+    email: order.email || '-',
     phone: order.phone,
     country: order.country,
     city: order.city,
@@ -227,17 +229,19 @@ export async function submitOrder(order: Order, shippingFee: number) {
     shipping_method: order.shippingMethod,
     payment_method: order.paymentMethod,
     subtotal,
-    shipping_fee: shippingFee,
+    shipping_fee: order.shippingFee ?? 0,
+    discount_amount: order.discountAmount ?? 0,
     total_amount: order.totalAmount,
+    notes: order.promoCode ? `Code promo : ${order.promoCode}` : null,
   });
   if (error) {
     console.warn('[Supabase] commande :', error.message);
-    return;
+    return false;
   }
   const { error: itemsError } = await supabase.from('order_items').insert(
     order.items.map((i) => ({
       order_id: order.orderId,
-      product_id: i.product.id,
+      product_id: i.product.parentId || i.product.id,
       product_name: i.product.name,
       product_image: i.product.image_url || i.product.image,
       unit_price: i.product.price,
@@ -246,5 +250,32 @@ export async function submitOrder(order: Order, shippingFee: number) {
       total_price: i.product.price * i.quantity,
     }))
   );
-  if (itemsError) console.warn('[Supabase] lignes de commande :', itemsError.message);
+  if (itemsError) {
+    console.warn('[Supabase] lignes de commande :', itemsError.message);
+    return false;
+  }
+  return true;
+}
+
+export interface TrackedOrder {
+  id: string;
+  status: string;
+  created_at: string;
+  total_amount: number;
+  shipping_method: string;
+  payment_method: string;
+  city: string;
+  items: { name: string; quantity: number; variant: string | null }[];
+}
+
+/** Suivi sans compte : numéro de commande + téléphone (fonction SQL track_order). */
+export async function trackOrder(orderId: string, phone: string): Promise<TrackedOrder | null | 'error'> {
+  if (!supabase) return 'error';
+  const { data, error } = await supabase.rpc('track_order', { p_order_id: orderId.trim().toUpperCase(), p_phone: phone });
+  if (error) {
+    console.warn('[Supabase] suivi :', error.message);
+    return 'error';
+  }
+  const row = Array.isArray(data) ? data[0] : data;
+  return (row as TrackedOrder) ?? null;
 }

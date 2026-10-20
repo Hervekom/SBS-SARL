@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSeo } from '../lib/seo';
 
 import { ProductGrid } from '../components/products/ProductGrid';
 import { useShop, useCatalog } from '../context/ShopContext';
@@ -7,6 +8,7 @@ import { Flame, Tag, Percent, Clock } from 'lucide-react';
 export const PromotionsPage: React.FC = () => {
   const { navigate } = useShop();
   const PRODUCTS = useCatalog();
+  useSeo({ title: 'Promotions téléphones et accessoires', description: 'Remises sur les smartphones, montres connectées et accessoires chez SBS SARL à Douala. Code SBS10 : -10 %.', path: '/promotions' });
   const promoProducts = PRODUCTS.filter((p) => p.isPromotion || (p.originalPrice && p.originalPrice > p.price));
 
   return (

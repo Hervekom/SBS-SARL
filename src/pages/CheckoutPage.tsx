@@ -1,24 +1,51 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { Order } from '../types';
-import { SHOP } from '../data/products';
-import { submitOrder } from '../lib/supabase';
-import {
-  ShieldCheck,
-  Truck,
-  CheckCircle2,
-  Lock,
-  ArrowRight,
-  ArrowLeft,
-  MessageCircle,
-  ShoppingBag,
-  CreditCard,
-  Smartphone,
-  Banknote,
-  Check,
-  Star,
-  Camera,
-} from 'lucide-react';
+import { SHIPPING_ZONES, SHOP, shippingFeeFor, whatsappLink } from '../data/products';
+import { submitOrder, isSupabaseConfigured } from '../lib/supabase';
+import { ArrowLeft, Check, CheckCircle2, MessageCircle, ShoppingBag, Tag, X, Loader2 } from 'lucide-react';
+
+type Payment = 'cod' | 'orange' | 'mtn';
+
+const PAYMENTS: { id: Payment; label: string; detail: string }[] = [
+  { id: 'cod', label: 'Espèces à la livraison', detail: 'Vous vérifiez le produit, puis vous payez le livreur.' },
+  { id: 'orange', label: 'Orange Money', detail: 'Le numéro marchand vous est envoyé sur WhatsApp après validation.' },
+  { id: 'mtn', label: 'MTN Mobile Money', detail: 'Le numéro marchand vous est envoyé sur WhatsApp après validation.' },
+];
+
+const PAYMENT_LABEL: Record<Payment, string> = {
+  cod: 'Espèces à la livraison',
+  orange: 'Orange Money',
+  mtn: 'MTN Mobile Money',
+};
+
+/** Message WhatsApp récapitulatif envoyé à SBS. */
+const buildWhatsappMessage = (o: Order, fmt: (n: number) => string) => {
+  const lines = o.items.map(
+    (i) => `• ${i.quantity} × ${i.product.name}${i.selectedVariant ? ` (${i.selectedVariant})` : ''} — ${fmt(i.product.price * i.quantity)}`
+  );
+  return [
+    `Bonjour SBS SARL, voici ma commande ${o.orderId} :`,
+    '',
+    ...lines,
+    '',
+    `Sous-total : ${fmt(o.subtotal ?? 0)}`,
+    o.discountAmount ? `Remise (${o.promoCode}) : -${fmt(o.discountAmount)}` : '',
+    `Livraison : ${o.shippingFee ? fmt(o.shippingFee) : 'offerte'}`,
+    `TOTAL : ${fmt(o.totalAmount)}`,
+    '',
+    `Nom : ${o.customerName}`,
+    `Téléphone : ${o.phone}`,
+    `Livraison : ${o.shippingMethod}`,
+    `Adresse : ${o.address}, ${o.city}`,
+    `Paiement : ${o.paymentMethod}`,
+  ]
+    .filter((l, idx, arr) => !(l === '' && arr[idx - 1] === ''))
+    .join('\n');
+};
+
+const inputCls =
+  'w-full px-4 py-3 rounded-xl border border-ink/15 bg-white text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand placeholder:text-ink/35';
 
 export const CheckoutPage: React.FC = () => {
   const {
@@ -28,775 +55,403 @@ export const CheckoutPage: React.FC = () => {
     formatPrice,
     navigate,
     addOrder,
-    activeOrder,
-    setActiveOrder,
-    updateOrderStatus,
-    setReviewModalOpen,
-    setReviewTargetOrder,
+    promoCode,
+    discountPercent,
+    discountAmount,
+    applyPromo,
+    clearPromo,
   } = useShop();
 
-  // Step state: 1: Informations | 2: Livraison | 3: Paiement | 4: Confirmation
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
+  const [form, setForm] = useState({ fullName: '', phone: '', email: '', city: 'Douala', address: '', note: '' });
+  const [zoneId, setZoneId] = useState('douala-centre');
+  const [payment, setPayment] = useState<Payment>('cod');
+  const [promoInput, setPromoInput] = useState('');
+  const [promoError, setPromoError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [confirmed, setConfirmed] = useState<{ order: Order; saved: boolean } | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Form Fields
-  const [formData, setFormData] = useState({
-    // 01 Informations client
-    fullName: '',
-    email: '',
-    phone: '',
+  const zone = SHIPPING_ZONES.find((z) => z.id === zoneId) ?? SHIPPING_ZONES[0];
+  const subtotal = cartTotal;
+  const shippingFee = shippingFeeFor(zoneId, subtotal - discountAmount);
+  const total = Math.max(0, subtotal - discountAmount + shippingFee);
+  const cashAllowed = zone.cashOnDelivery;
+  const effectivePayment: Payment = !cashAllowed && payment === 'cod' ? 'orange' : payment;
 
-    // 02 Adresse & Livraison
-    country: 'Cameroun',
-    city: 'Douala',
-    address: '',
-    postalCode: '',
-    shippingMethod: 'express', // express | standard | pickup
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }));
 
-    // 03 Paiement
-    paymentMethod: 'cod', // cod | wave | mobile_money | card
-  });
-
-  const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
-
-  const shippingFees: Record<string, number> = {
-    express: cartTotal >= SHOP.freeShippingThreshold || cartTotal === 0 ? 0 : SHOP.shippingFee,
-    standard: 0,
-    pickup: 0,
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (form.fullName.trim().length < 2) e.fullName = 'Indiquez votre nom.';
+    if (form.phone.replace(/\D/g, '').length < 8) e.phone = 'Numéro de téléphone invalide.';
+    if (zoneId !== 'retrait' && form.address.trim().length < 3) e.address = 'Indiquez votre quartier / repère.';
+    if (zoneId === 'autres-villes' && form.city.trim().length < 2) e.city = 'Indiquez votre ville.';
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const currentShippingFee = shippingFees[formData.shippingMethod] || 0;
-  const finalTotal = cartTotal + currentShippingFee;
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // Move to Next Step with light validation
-  const handleNextStep = (e: React.FormEvent) => {
+  const handlePromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (currentStep === 1) {
-      if (!formData.fullName || !formData.email || !formData.phone) return;
-      setCurrentStep(2);
-    } else if (currentStep === 2) {
-      if (!formData.country || !formData.city || !formData.address) return;
-      setCurrentStep(3);
-    } else if (currentStep === 3) {
-      // Create and save final order
-      const newOrderId = 'SBS-' + Math.floor(100000 + Math.random() * 900000);
-      const newOrder: Order = {
-        orderId: newOrderId,
-        date: 'Aujourd’hui',
-        customerName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        country: formData.country,
-        city: formData.city,
-        address: formData.address,
-        postalCode: formData.postalCode,
-        shippingMethod:
-          formData.shippingMethod === 'express'
-            ? 'Livraison Express Douala (24h)'
-            : formData.shippingMethod === 'pickup'
-            ? 'Retrait en boutique'
-            : 'Expédition par agence (24h-72h)',
-        paymentMethod:
-          formData.paymentMethod === 'cod'
-            ? 'Paiement à la livraison (Espèces)'
-            : formData.paymentMethod === 'wave'
-            ? 'Orange Money'
-            : formData.paymentMethod === 'mobile_money'
-            ? 'MTN Mobile Money'
-            : 'Carte Bancaire (Visa / Mastercard)',
-        items: [...cart],
-        totalAmount: finalTotal,
-        status: 'En préparation',
-      };
-
-      addOrder(newOrder);
-      submitOrder(newOrder, currentShippingFee);
-      setConfirmedOrder(newOrder);
-      clearCart();
-      setCurrentStep(4);
-    }
+    if (applyPromo(promoInput)) {
+      setPromoError('');
+      setPromoInput('');
+    } else setPromoError('Code invalide ou expiré.');
   };
 
-  // If on confirmation step
-  if (currentStep === 4 && confirmedOrder) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate() || submitting) return;
+    setSubmitting(true);
+    const order: Order = {
+      orderId: 'SBS-' + Math.floor(100000 + Math.random() * 900000),
+      date: new Date().toLocaleDateString('fr-FR'),
+      customerName: form.fullName.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      country: 'Cameroun',
+      city: zoneId === 'autres-villes' ? form.city.trim() : 'Douala',
+      address: zoneId === 'retrait' ? 'Retrait en boutique – Akwa' : form.address.trim() + (form.note ? ` (${form.note.trim()})` : ''),
+      postalCode: '',
+      shippingMethod: `${zone.label} – ${zone.delay}`,
+      paymentMethod: PAYMENT_LABEL[effectivePayment],
+      items: [...cart],
+      subtotal,
+      discountAmount,
+      promoCode: promoCode || undefined,
+      shippingFee,
+      totalAmount: total,
+      status: 'En préparation',
+    };
+    const saved = await submitOrder(order);
+    addOrder(order);
+    clearCart();
+    clearPromo();
+    setConfirmed({ order, saved });
+    setSubmitting(false);
+    window.scrollTo({ top: 0 });
+  };
+
+  const waText = useMemo(() => (confirmed ? buildWhatsappMessage(confirmed.order, formatPrice) : ''), [confirmed, formatPrice]);
+
+  // ------------------------------------------------------------- confirmation
+  if (confirmed) {
+    const o = confirmed.order;
     return (
-      <div className="py-12 sm:py-20 bg-porcelain min-h-screen text-left">
-        <div className="max-w-2xl mx-auto px-4 space-y-8 animate-fadeIn">
-          
-          {/* Header Confirmation */}
-          <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border-2 border-emerald-200 shadow-sm">
-              <Check className="w-8 h-8 text-emerald-600" />
+      <div className="bg-porcelain min-h-screen py-10 sm:py-16">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          <div className="bg-white rounded-3xl border border-ink/10 p-6 sm:p-10">
+            <div className="w-12 h-12 rounded-full bg-[#E8F5EF] text-[#1F7A5C] flex items-center justify-center">
+              <CheckCircle2 className="w-6 h-6" />
             </div>
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-dark">
-              Étape 04 · Confirmation
-            </span>
-            <h1 className="text-2xl sm:text-4xl font-semibold text-ink">
-              Merci pour votre commande !
-            </h1>
-            <p className="text-xs sm:text-sm text-neutral-600 max-w-md mx-auto font-light">
-              Votre commande a été transmise à notre service logistique. Vous recevrez un appel du livreur dès son départ.
+            <h1 className="mt-5 text-3xl sm:text-4xl leading-tight">Merci {o.customerName.split(' ')[0]} !</h1>
+            <p className="mt-2 text-ink/65">
+              Votre commande <strong className="text-ink">{o.orderId}</strong> est enregistrée. Dernière étape :
+              envoyez-la à SBS sur WhatsApp pour confirmer la livraison.
             </p>
-          </div>
 
-          {/* Reçu de commande détaillé */}
-          <div className="bg-white rounded-3xl border border-ink/10 p-6 sm:p-8 space-y-5 shadow-xs text-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-ink/10 gap-2">
-              <div>
-                <span className="text-neutral-400">Numéro de Commande</span>
-                <p className="font-mono font-bold text-base text-ink">
-                  #{confirmedOrder.orderId}
-                </p>
-              </div>
-
-              {/* État de commande dynamique */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-porcelain border border-brand/40 text-ink font-semibold">
-                <span className="w-2 h-2 rounded-full bg-brand animate-pulse" />
-                <span>Statut : {confirmedOrder.status}</span>
-              </div>
-            </div>
-
-            {/* Détails client & livraison */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <p className="text-neutral-400 font-semibold mb-1">Informations Client</p>
-                <p className="font-bold text-ink">{confirmedOrder.customerName}</p>
-                <p className="text-neutral-600">{confirmedOrder.phone}</p>
-                <p className="text-neutral-600">{confirmedOrder.email}</p>
-              </div>
-
-              <div>
-                <p className="text-neutral-400 font-semibold mb-1">Adresse de Réception</p>
-                <p className="font-bold text-ink">{confirmedOrder.city}, {confirmedOrder.country}</p>
-                <p className="text-neutral-600">{confirmedOrder.address}</p>
-                <p className="text-neutral-500 font-mono">CP : {confirmedOrder.postalCode}</p>
-              </div>
-            </div>
-
-            {/* Mode de livraison & paiement */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-ink/5">
-              <div>
-                <p className="text-neutral-400">Mode de Livraison</p>
-                <p className="font-semibold text-ink">{confirmedOrder.shippingMethod}</p>
-              </div>
-              <div>
-                <p className="text-neutral-400">Mode de Règlement</p>
-                <p className="font-semibold text-ink">{confirmedOrder.paymentMethod}</p>
-              </div>
-            </div>
-
-            {/* Total Net */}
-            <div className="pt-4 border-t border-ink/10 flex justify-between items-baseline">
-              <span className="text-sm font-bold text-ink">Montant Total Dû</span>
-              <span className="text-xl font-mono font-extrabold text-ink">
-                {formatPrice(confirmedOrder.totalAmount)}
-              </span>
-            </div>
-          </div>
-
-          {/* SIMULATION : Confirmer la réception pour déclencher l'avis avec photo */}
-          {confirmedOrder.status !== 'Livrée et reçue' ? (
-            <div className="p-4 rounded-2xl bg-porcelain border border-brand/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-              <div className="space-y-0.5">
-                <span className="font-bold text-ink flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-brand" />
-                  Simuler la réception de votre colis
-                </span>
-                <p className="text-neutral-500 font-light">
-                  Permet de tester l'invitation à laisser un avis client avec photo.
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  updateOrderStatus(confirmedOrder.orderId, 'Livrée et reçue');
-                  setConfirmedOrder({ ...confirmedOrder, status: 'Livrée et reçue' });
-                  setReviewTargetOrder(confirmedOrder);
-                  setReviewModalOpen(true);
-                }}
-                className="px-4 py-2 bg-ink text-brand rounded-xl font-bold text-xs hover:bg-black transition-colors cursor-pointer shrink-0"
-              >
-                Colis reçu (Déclencher avis)
-              </button>
-            </div>
-          ) : (
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                <span className="font-semibold text-emerald-900">
-                  Commande confirmée comme reçue ! Merci pour votre confiance.
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  setReviewTargetOrder(confirmedOrder);
-                  setReviewModalOpen(true);
-                }}
-                className="px-3.5 py-1.5 bg-emerald-700 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 hover:bg-emerald-800 transition-colors"
-              >
-                <Camera className="w-3.5 h-3.5" />
-                <span>Laisser un avis avec photo</span>
-              </button>
-            </div>
-          )}
-
-          {/* Navigation boutons */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
             <a
-              href={`https://wa.me/${SHOP.whatsappNumber}?text=${encodeURIComponent(
-                `Bonjour SBS SARL, je confirme ma commande #${confirmedOrder.orderId} d'un montant de ${formatPrice(
-                  confirmedOrder.totalAmount
-                )}.`
-              )}`}
+              href={whatsappLink(waText)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto flex-1 py-3.5 px-6 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
+              className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold py-4 transition-colors"
             >
-              <MessageCircle className="w-4 h-4 fill-white" />
-              <span>Suivre sur WhatsApp avec un conseiller</span>
+              <MessageCircle className="w-5 h-5" />
+              Envoyer ma commande à SBS sur WhatsApp
             </a>
+            <p className="mt-2 text-xs text-center text-ink/50">Le message est déjà rédigé, il suffit d’appuyer sur « Envoyer ».</p>
 
-            <button
-              onClick={() => navigate('/compte')}
-              className="w-full sm:w-auto px-6 py-3.5 bg-ink hover:bg-black text-white font-semibold text-xs rounded-xl transition-colors cursor-pointer"
-            >
-              Aller à mon Compte Client
-            </button>
-          </div>
-
-        </div>
-      </div>
-    );
-  }
-
-  // If cart is empty and not confirmed
-  if (cart.length === 0) {
-    return (
-      <div className="py-20 text-center space-y-4 bg-porcelain min-h-screen">
-        <div className="w-16 h-16 rounded-full bg-[#F4F2EF] text-neutral-400 flex items-center justify-center mx-auto border border-ink/10">
-          <ShoppingBag className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-semibold text-ink">Votre panier est vide</h2>
-        <p className="text-xs text-neutral-500 max-w-sm mx-auto">
-          Ajoutez des téléphones ou accessoires à votre panier pour finaliser votre commande.
-        </p>
-        <button
-          onClick={() => navigate('/')}
-          className="px-6 py-3 bg-ink text-brand rounded-xl text-xs font-semibold hover:bg-black cursor-pointer"
-        >
-          Découvrir les collections
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="py-8 sm:py-12 bg-porcelain min-h-screen text-left">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
-        
-        {/* Titre & Étapes 01, 02, 03, 04 */}
-        <div className="space-y-4">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-brand-dark block mb-1">
-              Finalisation de Commande
-            </span>
-            <h1 className="text-2xl sm:text-4xl font-semibold text-ink">
-              Paiement Sécurisé
-            </h1>
-          </div>
-
-          {/* Stepper Minimaliste 01, 02, 03, 04 */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4 max-w-3xl">
-            {[
-              { step: 1, label: '01 Informations' },
-              { step: 2, label: '02 Livraison' },
-              { step: 3, label: '03 Paiement' },
-              { step: 4, label: '04 Confirmation' },
-            ].map((s) => {
-              const isPassed = currentStep > s.step;
-              const isCurrent = currentStep === s.step;
-              return (
-                <div
-                  key={s.step}
-                  onClick={() => {
-                    if (s.step < currentStep) setCurrentStep(s.step as any);
-                  }}
-                  className={`p-3 rounded-xl border transition-all text-xs font-bold flex items-center gap-2 ${
-                    isCurrent
-                      ? 'bg-ink text-brand border-ink shadow-xs'
-                      : isPassed
-                      ? 'bg-white text-neutral-800 border-ink/10 cursor-pointer hover:border-brand'
-                      : 'bg-[#F4F2EF] text-neutral-400 border-transparent'
-                  }`}
-                >
-                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold bg-brand/20 text-brand">
-                    {isPassed ? '✓' : s.step}
+            <div className="mt-8 divide-y divide-ink/10 border-y border-ink/10 text-sm">
+              {o.items.map((i) => (
+                <div key={i.product.id} className="py-3 flex justify-between gap-4">
+                  <span className="text-ink/75">
+                    {i.quantity} × {i.product.name}
+                    {i.selectedVariant && <span className="text-ink/45"> · {i.selectedVariant}</span>}
                   </span>
-                  <span className="truncate">{s.label}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Contenu Formulaire + Résumé de Commande */}
-        <form onSubmit={handleNextStep} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Colonne Gauche : Formulaire de l'étape courante */}
-          <div className="lg:col-span-8 space-y-6">
-            
-            {/* ======================================================== */}
-            {/* ÉTAPE 01 : INFORMATIONS CLIENT                           */}
-            {/* Nom | Email | Téléphone                                 */}
-            {/* ======================================================== */}
-            {currentStep === 1 && (
-              <div className="bg-white rounded-3xl border border-ink/10 p-6 sm:p-8 space-y-5 shadow-xs animate-fadeIn">
-                <div className="border-b border-ink/10 pb-3">
-                  <h2 className="text-base font-semibold text-ink">
-                    01. Informations Client
-                  </h2>
-                  <p className="text-xs text-neutral-500 font-light">
-                    Vos coordonnées nécessaires à la confirmation et au suivi de votre commande.
-                  </p>
-                </div>
-
-                <div className="space-y-4 text-xs">
-                  <div>
-                    <label className="font-semibold text-neutral-700 block mb-1">Nom complet *</label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      required
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      placeholder="Ex: Amina Traoré"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="font-semibold text-neutral-700 block mb-1">Adresse Email *</label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Ex: amina.traore@example.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-semibold text-neutral-700 block mb-1">
-                        Numéro Téléphone / WhatsApp *
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="Ex: +237 6XX XX XX XX"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-2 flex justify-end">
-                  <button
-                    type="submit"
-                    className="px-6 py-3.5 bg-ink hover:bg-black text-white font-bold text-xs rounded-xl tracking-wide transition-all shadow-sm flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>Continuer vers la livraison</span>
-                    <ArrowRight className="w-4 h-4 text-brand" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* ======================================================== */}
-            {/* ÉTAPE 02 : LIVRAISON & ADRESSE                          */}
-            {/* Pays | Ville | Adresse | Code postal | Méthode livraison*/}
-            {/* ======================================================== */}
-            {currentStep === 2 && (
-              <div className="bg-white rounded-3xl border border-ink/10 p-6 sm:p-8 space-y-6 shadow-xs animate-fadeIn">
-                <div className="border-b border-ink/10 pb-3">
-                  <h2 className="text-base font-semibold text-ink">
-                    02. Adresse de Réception & Méthode de Livraison
-                  </h2>
-                  <p className="text-xs text-neutral-500 font-light">
-                    Où souhaitez-vous que notre service de livraison dépose votre colis ?
-                  </p>
-                </div>
-
-                {/* Adresse */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <label className="font-semibold text-neutral-700 block mb-1">Pays *</label>
-                    <select
-                      name="country"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
-                    >
-                      <option value="Cameroun">Cameroun</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="font-semibold text-neutral-700 block mb-1">Ville *</label>
-                    <input
-                      type="text"
-                      name="city"
-                      required
-                      value={formData.city}
-                      onChange={handleChange}
-                      placeholder="Ex: Douala, Yaoundé, Bafoussam..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <label className="font-semibold text-neutral-700 block mb-1">
-                      Adresse précise (Quartier, Rue, Résidence) *
-                    </label>
-                    <input
-                      type="text"
-                      name="address"
-                      required
-                      value={formData.address}
-                      onChange={handleChange}
-                      placeholder="Ex: Akwa, rue Joss, en face de la pharmacie"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-semibold text-neutral-700 block mb-1">Code Postal</label>
-                    <input
-                      type="text"
-                      name="postalCode"
-                      value={formData.postalCode}
-                      onChange={handleChange}
-                      placeholder="Facultatif"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
-                    />
-                  </div>
-                </div>
-
-                {/* Méthode de livraison */}
-                <div className="space-y-3 pt-2">
-                  <p className="font-bold text-xs text-ink uppercase tracking-wider text-brand-dark">
-                    Sélectionner la Méthode de Livraison
-                  </p>
-
-                  <div className="space-y-2 text-xs">
-                    <label
-                      className={`flex items-start gap-3 p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                        formData.shippingMethod === 'express'
-                          ? 'border-brand bg-porcelain'
-                          : 'border-ink/10 bg-white'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="shippingMethod"
-                        value="express"
-                        checked={formData.shippingMethod === 'express'}
-                        onChange={handleChange}
-                        className="mt-0.5 text-brand focus:ring-brand"
-                      />
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-ink">
-                            Livraison à domicile (Douala 24h · autres villes par agence)
-                          </span>
-                          <span className="font-mono font-bold text-brand">
-                            {currentShippingFee === 0 ? 'Gratuite' : formatPrice(currentShippingFee)}
-                          </span>
-                        </div>
-                        <p className="text-neutral-500 font-light mt-0.5">
-                          Notre livreur vous remet le colis ; vous vérifiez avant de payer.
-                        </p>
-                      </div>
-                    </label>
-
-                    <label
-                      className={`flex items-start gap-3 p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                        formData.shippingMethod === 'pickup'
-                          ? 'border-brand bg-porcelain'
-                          : 'border-ink/10 bg-white'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="shippingMethod"
-                        value="pickup"
-                        checked={formData.shippingMethod === 'pickup'}
-                        onChange={handleChange}
-                        className="mt-0.5 text-brand focus:ring-brand"
-                      />
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-ink">
-                            Retrait en boutique SBS (Douala)
-                          </span>
-                          <span className="font-mono font-bold text-emerald-600">Gratuit</span>
-                        </div>
-                        <p className="text-neutral-500 font-light mt-0.5">
-                          Disponible le jour même, avec pose du verre trempé offerte.
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="pt-2 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep(1)}
-                    className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-ink cursor-pointer"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Retour aux informations</span>
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="px-6 py-3.5 bg-ink hover:bg-black text-white font-bold text-xs rounded-xl tracking-wide transition-all shadow-sm flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>Continuer vers le paiement</span>
-                    <ArrowRight className="w-4 h-4 text-brand" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* ======================================================== */}
-            {/* ÉTAPE 03 : PAIEMENT                                      */}
-            {/* Méthodes de paiement                                    */}
-            {/* ======================================================== */}
-            {currentStep === 3 && (
-              <div className="bg-white rounded-3xl border border-ink/10 p-6 sm:p-8 space-y-6 shadow-xs animate-fadeIn">
-                <div className="border-b border-ink/10 pb-3">
-                  <h2 className="text-base font-semibold text-ink">
-                    03. Choix du Mode de Paiement
-                  </h2>
-                  <p className="text-xs text-neutral-500 font-light">
-                    Sélectionnez votre mode de règlement préféré. Toutes les transactions sont cryptées et certifiées.
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {/* Paiement à la livraison */}
-                  <label
-                    className={`flex items-start gap-3 p-4 rounded-2xl border transition-all cursor-pointer ${
-                      formData.paymentMethod === 'cod'
-                        ? 'border-brand bg-porcelain'
-                        : 'border-ink/10 bg-white'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cod"
-                      checked={formData.paymentMethod === 'cod'}
-                      onChange={handleChange}
-                      className="mt-1 text-brand focus:ring-brand"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <Banknote className="w-4 h-4 text-brand" />
-                        <span className="font-bold text-xs sm:text-sm text-ink">
-                          Paiement à la livraison (Espèces)
-                        </span>
-                      </div>
-                      <p className="text-xs text-neutral-500 font-light mt-1">
-                        Inspectez votre colis avec le coursier avant de régler en toute confiance.
-                      </p>
-                    </div>
-                  </label>
-
-                  {/* Orange Money */}
-                  <label
-                    className={`flex items-start gap-3 p-4 rounded-2xl border transition-all cursor-pointer ${
-                      formData.paymentMethod === 'wave'
-                        ? 'border-brand bg-porcelain'
-                        : 'border-ink/10 bg-white'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="wave"
-                      checked={formData.paymentMethod === 'wave'}
-                      onChange={handleChange}
-                      className="mt-1 text-brand focus:ring-brand"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <Smartphone className="w-4 h-4 text-brand" />
-                        <span className="font-bold text-xs sm:text-sm text-ink">
-                          Orange Money
-                        </span>
-                      </div>
-                      <p className="text-xs text-neutral-500 font-light mt-1">
-                        Paiement via #150# ; vous recevez le numéro marchand après validation.
-                      </p>
-                    </div>
-                  </label>
-
-                  {/* Mobile Money Orange / MTN */}
-                  <label
-                    className={`flex items-start gap-3 p-4 rounded-2xl border transition-all cursor-pointer ${
-                      formData.paymentMethod === 'mobile_money'
-                        ? 'border-brand bg-porcelain'
-                        : 'border-ink/10 bg-white'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="mobile_money"
-                      checked={formData.paymentMethod === 'mobile_money'}
-                      onChange={handleChange}
-                      className="mt-1 text-brand focus:ring-brand"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <Smartphone className="w-4 h-4 text-brand" />
-                        <span className="font-bold text-xs sm:text-sm text-ink">
-                          MTN Mobile Money
-                        </span>
-                      </div>
-                      <p className="text-xs text-neutral-500 font-light mt-1">
-                        Paiement via *126# ; vous recevez le numéro marchand après validation.
-                      </p>
-                    </div>
-                  </label>
-
-                  {/* Carte Bancaire */}
-                  <label
-                    className={`flex items-start gap-3 p-4 rounded-2xl border transition-all cursor-pointer ${
-                      formData.paymentMethod === 'card'
-                        ? 'border-brand bg-porcelain'
-                        : 'border-ink/10 bg-white'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="card"
-                      checked={formData.paymentMethod === 'card'}
-                      onChange={handleChange}
-                      className="mt-1 text-brand focus:ring-brand"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <CreditCard className="w-4 h-4 text-brand" />
-                        <span className="font-bold text-xs sm:text-sm text-ink">
-                          Carte Bancaire (Visa / Mastercard)
-                        </span>
-                      </div>
-                      <p className="text-xs text-neutral-500 font-light mt-1">
-                        Chiffrement 3D Secure conforme aux standards bancaires internationaux.
-                      </p>
-                    </div>
-                  </label>
-                </div>
-
-                <div className="pt-2 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep(2)}
-                    className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-ink cursor-pointer"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Retour à la livraison</span>
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="px-6 py-3.5 bg-ink hover:bg-black text-white font-bold text-xs rounded-xl tracking-wide transition-all shadow-md flex items-center gap-2 cursor-pointer"
-                  >
-                    <Lock className="w-4 h-4 text-brand" />
-                    <span>Confirmer la commande ({formatPrice(finalTotal)})</span>
-                  </button>
-                </div>
-              </div>
-            )}
-
-          </div>
-
-          {/* ======================================================== */}
-          {/* COLONNE DROITE : RÉSUMÉ DE COMMANDE MINIMALISTE          */}
-          {/* ======================================================== */}
-          <div className="lg:col-span-4 bg-white rounded-3xl border border-ink/10 p-6 space-y-5 shadow-xs sticky top-28">
-            <div className="border-b border-ink/10 pb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink">Résumé de Commande</h2>
-              <span className="text-xs text-neutral-400 font-mono">
-                {cart.reduce((s, i) => s + i.quantity, 0)} articles
-              </span>
-            </div>
-
-            {/* Liste compacte des articles */}
-            <div className="space-y-3 max-h-56 overflow-y-auto pr-1">
-              {cart.map((item) => (
-                <div key={item.product.id} className="flex items-center gap-3 text-xs">
-                  <img
-                    src={item.product.image_url || item.product.image}
-                    alt=""
-                    className="w-12 h-12 object-contain rounded-xl bg-[#F4F2EF] p-1 border border-ink/10 shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-ink truncate">{item.product.name}</p>
-                    <p className="text-[11px] text-neutral-400 font-mono">
-                      Qté: {item.quantity} × {formatPrice(item.product.price)}
-                    </p>
-                  </div>
-                  <span className="font-mono font-bold text-ink">
-                    {formatPrice(item.product.price * item.quantity)}
-                  </span>
+                  <span className="font-semibold tabular-nums shrink-0">{formatPrice(i.product.price * i.quantity)}</span>
                 </div>
               ))}
-            </div>
-
-            {/* Décomposition financière */}
-            <div className="space-y-2 text-xs text-neutral-600 border-t border-ink/10 pt-4">
-              <div className="flex justify-between">
-                <span>Sous-total</span>
-                <span className="font-mono tabular-nums text-ink">{formatPrice(cartTotal)}</span>
+              {!!o.discountAmount && (
+                <div className="py-3 flex justify-between text-[#1F7A5C]">
+                  <span>Remise {o.promoCode}</span>
+                  <span className="tabular-nums">-{formatPrice(o.discountAmount)}</span>
+                </div>
+              )}
+              <div className="py-3 flex justify-between">
+                <span className="text-ink/75">Livraison</span>
+                <span className="tabular-nums">{o.shippingFee ? formatPrice(o.shippingFee) : 'Offerte'}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Frais de livraison</span>
-                <span className="font-mono tabular-nums text-ink">
-                  {currentShippingFee === 0 ? 'Gratuite' : formatPrice(currentShippingFee)}
-                </span>
-              </div>
-              <div className="pt-2.5 border-t border-ink/10 flex justify-between items-baseline text-sm font-bold text-ink">
-                <span>Montant Net Total</span>
-                <span className="text-lg font-mono font-extrabold text-ink">
-                  {formatPrice(finalTotal)}
-                </span>
+              <div className="py-3 flex justify-between text-base font-bold">
+                <span>Total</span>
+                <span className="tabular-nums">{formatPrice(o.totalAmount)}</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 pt-1">
-              <ShieldCheck className="w-4 h-4 text-brand" />
-              <span>Garantie Authenticité & Sécurité bancaire</span>
+            <dl className="mt-6 grid sm:grid-cols-2 gap-4 text-sm">
+              <div>
+                <dt className="text-ink/50">Livraison</dt>
+                <dd className="font-medium">{o.shippingMethod}</dd>
+                <dd className="text-ink/65">{o.address}</dd>
+              </div>
+              <div>
+                <dt className="text-ink/50">Paiement</dt>
+                <dd className="font-medium">{o.paymentMethod}</dd>
+                <dd className="text-ink/65">{o.phone}</dd>
+              </div>
+            </dl>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              {confirmed.saved && (
+                <button
+                  onClick={() => navigate(`/suivi?commande=${o.orderId}`)}
+                  className="flex-1 rounded-full border border-ink/15 hover:border-ink/40 py-3 text-sm font-semibold transition-colors cursor-pointer"
+                >
+                  Suivre ma commande
+                </button>
+              )}
+              <button
+                onClick={() => navigate('/')}
+                className="flex-1 rounded-full bg-ink hover:bg-black text-white py-3 text-sm font-semibold transition-colors cursor-pointer"
+              >
+                Continuer mes achats
+              </button>
             </div>
+            {!confirmed.saved && isSupabaseConfigured && (
+              <p className="mt-4 text-xs text-ink/50">
+                La commande n’a pas pu être enregistrée en ligne : l’envoi WhatsApp ci-dessus suffit pour la valider.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ------------------------------------------------------------- panier vide
+  if (cart.length === 0) {
+    return (
+      <div className="bg-porcelain min-h-[60vh] py-20">
+        <div className="max-w-md mx-auto px-4 text-center">
+          <ShoppingBag className="w-10 h-10 mx-auto text-ink/30" />
+          <h1 className="mt-4 text-3xl">Votre panier est vide</h1>
+          <p className="mt-2 text-ink/60">Ajoutez un téléphone ou un accessoire pour passer commande.</p>
+          <button
+            onClick={() => navigate('/smartphones')}
+            className="mt-6 rounded-full bg-brand hover:bg-brand-hover text-white px-6 py-3 text-sm font-semibold cursor-pointer"
+          >
+            Voir les téléphones
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ------------------------------------------------------------- formulaire
+  return (
+    <div className="bg-porcelain min-h-screen py-8 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <button onClick={() => navigate('/panier')} className="inline-flex items-center gap-1.5 text-sm text-ink/60 hover:text-ink cursor-pointer">
+          <ArrowLeft className="w-4 h-4" /> Retour au panier
+        </button>
+        <h1 className="mt-3 text-3xl sm:text-4xl">Finaliser ma commande</h1>
+        <p className="mt-1 text-ink/60">Aucun paiement en ligne : vous réglez à la livraison ou par Mobile Money.</p>
+
+        <form onSubmit={handleSubmit} className="mt-8 grid lg:grid-cols-[1fr_380px] gap-8 items-start" noValidate>
+          <div className="space-y-6">
+            {/* Coordonnées */}
+            <fieldset className="bg-white rounded-2xl border border-ink/10 p-5 sm:p-6">
+              <legend className="font-display text-xl font-semibold px-1">1. Vos coordonnées</legend>
+              <div className="mt-4 grid sm:grid-cols-2 gap-4">
+                <label className="block">
+                  <span className="text-sm font-medium">Nom complet *</span>
+                  <input className={`${inputCls} mt-1.5`} value={form.fullName} onChange={set('fullName')} autoComplete="name" placeholder="Ex : Paul Ndjock" />
+                  {errors.fullName && <span className="text-xs text-red-600">{errors.fullName}</span>}
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium">Téléphone / WhatsApp *</span>
+                  <input className={`${inputCls} mt-1.5`} value={form.phone} onChange={set('phone')} type="tel" autoComplete="tel" placeholder="Ex : 6 71 70 84 75" />
+                  {errors.phone && <span className="text-xs text-red-600">{errors.phone}</span>}
+                </label>
+                <label className="block sm:col-span-2">
+                  <span className="text-sm font-medium">E-mail <span className="text-ink/45 font-normal">(facultatif)</span></span>
+                  <input className={`${inputCls} mt-1.5`} value={form.email} onChange={set('email')} type="email" autoComplete="email" placeholder="vous@exemple.com" />
+                </label>
+              </div>
+            </fieldset>
+
+            {/* Livraison */}
+            <fieldset className="bg-white rounded-2xl border border-ink/10 p-5 sm:p-6">
+              <legend className="font-display text-xl font-semibold px-1">2. Livraison</legend>
+              <div className="mt-4 grid gap-2.5">
+                {SHIPPING_ZONES.map((z) => {
+                  const fee = shippingFeeFor(z.id, subtotal - discountAmount);
+                  const active = z.id === zoneId;
+                  return (
+                    <label
+                      key={z.id}
+                      className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-colors ${
+                        active ? 'border-brand bg-blush/60' : 'border-ink/10 hover:border-ink/25'
+                      }`}
+                    >
+                      <input type="radio" name="zone" checked={active} onChange={() => setZoneId(z.id)} className="mt-1 accent-[#F26B1D]" />
+                      <span className="flex-1">
+                        <span className="flex justify-between gap-3">
+                          <span className="text-sm font-semibold">{z.label}</span>
+                          <span className="text-sm font-semibold tabular-nums shrink-0">{fee === 0 ? 'Gratuit' : formatPrice(fee)}</span>
+                        </span>
+                        <span className="block text-xs text-ink/55 mt-0.5">
+                          {z.delay} · {z.detail}
+                        </span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+
+              {zoneId !== 'retrait' && (
+                <div className="mt-4 grid sm:grid-cols-2 gap-4">
+                  {zoneId === 'autres-villes' && (
+                    <label className="block">
+                      <span className="text-sm font-medium">Ville *</span>
+                      <input className={`${inputCls} mt-1.5`} value={form.city === 'Douala' ? '' : form.city} onChange={set('city')} placeholder="Ex : Yaoundé" />
+                      {errors.city && <span className="text-xs text-red-600">{errors.city}</span>}
+                    </label>
+                  )}
+                  <label className={`block ${zoneId === 'autres-villes' ? '' : 'sm:col-span-2'}`}>
+                    <span className="text-sm font-medium">{zoneId === 'autres-villes' ? 'Agence de voyage souhaitée *' : 'Quartier et point de repère *'}</span>
+                    <input
+                      className={`${inputCls} mt-1.5`}
+                      value={form.address}
+                      onChange={set('address')}
+                      placeholder={zoneId === 'autres-villes' ? 'Ex : Général Express, Mvan' : 'Ex : Akwa, rue Joss, face pharmacie du Centre'}
+                    />
+                    {errors.address && <span className="text-xs text-red-600">{errors.address}</span>}
+                  </label>
+                  <label className="block sm:col-span-2">
+                    <span className="text-sm font-medium">Précisions <span className="text-ink/45 font-normal">(facultatif)</span></span>
+                    <textarea className={`${inputCls} mt-1.5`} rows={2} value={form.note} onChange={set('note')} placeholder="Heure de passage, couleur souhaitée…" />
+                  </label>
+                </div>
+              )}
+            </fieldset>
+
+            {/* Paiement */}
+            <fieldset className="bg-white rounded-2xl border border-ink/10 p-5 sm:p-6">
+              <legend className="font-display text-xl font-semibold px-1">3. Paiement</legend>
+              <div className="mt-4 grid gap-2.5">
+                {PAYMENTS.map((p) => {
+                  const disabled = p.id === 'cod' && !cashAllowed;
+                  const active = effectivePayment === p.id;
+                  return (
+                    <label
+                      key={p.id}
+                      className={`flex items-start gap-3 p-4 rounded-xl border transition-colors ${
+                        disabled ? 'opacity-45 cursor-not-allowed border-ink/10' : 'cursor-pointer'
+                      } ${active ? 'border-brand bg-blush/60' : 'border-ink/10 hover:border-ink/25'}`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment"
+                        disabled={disabled}
+                        checked={active}
+                        onChange={() => setPayment(p.id)}
+                        className="mt-1 accent-[#F26B1D]"
+                      />
+                      <span>
+                        <span className="block text-sm font-semibold">{p.label}</span>
+                        <span className="block text-xs text-ink/55 mt-0.5">
+                          {disabled ? 'Non disponible pour une expédition hors de Douala.' : p.detail}
+                        </span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
           </div>
 
-        </form>
+          {/* Récapitulatif */}
+          <aside className="bg-white rounded-2xl border border-ink/10 p-5 sm:p-6 lg:sticky lg:top-28">
+            <h2 className="text-xl">Récapitulatif</h2>
+            <ul className="mt-4 divide-y divide-ink/10 max-h-72 overflow-y-auto">
+              {cart.map((i) => (
+                <li key={i.product.id} className="py-3 flex gap-3">
+                  <img src={i.product.image} alt="" className="w-14 h-14 rounded-xl object-cover bg-[#F4F2EF] shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium line-clamp-2">{i.product.name}</p>
+                    <p className="text-xs text-ink/50">
+                      Qté {i.quantity}
+                      {i.selectedVariant && ` · ${i.selectedVariant}`}
+                    </p>
+                  </div>
+                  <span className="text-sm font-semibold tabular-nums shrink-0">{formatPrice(i.product.price * i.quantity)}</span>
+                </li>
+              ))}
+            </ul>
 
+            {promoCode ? (
+              <div className="mt-4 flex items-center justify-between rounded-xl bg-[#E8F5EF] text-[#1F7A5C] px-3 py-2.5 text-sm">
+                <span className="inline-flex items-center gap-1.5 font-semibold">
+                  <Tag className="w-4 h-4" /> {promoCode} (-{discountPercent} %)
+                </span>
+                <button type="button" onClick={clearPromo} className="p-1 hover:bg-white/50 rounded-full cursor-pointer" aria-label="Retirer le code">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4">
+                <div className="flex gap-2">
+                  <input
+                    className="flex-1 min-w-0 px-3 py-2.5 rounded-xl border border-ink/15 text-sm uppercase focus:outline-none focus:border-brand"
+                    placeholder="Code promo"
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handlePromo(e);
+                    }}
+                  />
+                  <button type="button" onClick={handlePromo} className="px-4 rounded-xl bg-ink text-white text-sm font-semibold cursor-pointer">
+                    Appliquer
+                  </button>
+                </div>
+                {promoError && <p className="mt-1 text-xs text-red-600">{promoError}</p>}
+              </div>
+            )}
+
+            <dl className="mt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <dt className="text-ink/65">Sous-total</dt>
+                <dd className="tabular-nums">{formatPrice(subtotal)}</dd>
+              </div>
+              {discountAmount > 0 && (
+                <div className="flex justify-between text-[#1F7A5C]">
+                  <dt>Remise</dt>
+                  <dd className="tabular-nums">-{formatPrice(discountAmount)}</dd>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <dt className="text-ink/65">Livraison</dt>
+                <dd className="tabular-nums">{shippingFee === 0 ? 'Gratuite' : formatPrice(shippingFee)}</dd>
+              </div>
+              <div className="flex justify-between pt-3 border-t border-ink/10 text-base font-bold">
+                <dt>Total</dt>
+                <dd className="tabular-nums">{formatPrice(total)}</dd>
+              </div>
+            </dl>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="mt-5 w-full rounded-full bg-brand hover:bg-brand-hover disabled:opacity-60 text-white font-semibold py-3.5 transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+              Valider ma commande
+            </button>
+            <p className="mt-3 text-xs text-ink/50 text-center">
+              Vous recevrez ensuite le récapitulatif à envoyer à SBS sur WhatsApp ({SHOP.phoneDisplay}).
+            </p>
+          </aside>
+        </form>
       </div>
     </div>
   );
