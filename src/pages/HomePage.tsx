@@ -10,6 +10,7 @@ import {
   Headphones,
   Star,
   ArrowRight,
+  Search,
 } from 'lucide-react';
 import { useShop, useCatalog } from '../context/ShopContext';
 import { CATEGORIES, SHOP, heroBannerImg, whatsappLink } from '../data/products';
@@ -86,17 +87,11 @@ const FAQ = [
 // Page d'accueil
 // ---------------------------------------------------------------------------
 export const HomePage: React.FC = () => {
-  const { navigate, formatPrice, setSearchQuery, reviews } = useShop();
+  const { navigate, formatPrice, setSearchQuery, setIsSearchOpen, reviews } = useShop();
   const PRODUCTS = useCatalog();
   const [tab, setTab] = useState<CategoryId | 'top'>('top');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  const heroPicks = useMemo(
-    () => ['prod-iphone-15-pro-max', 'prod-galaxy-a55', 'prod-powerbank-20000']
-      .map((id) => PRODUCTS.find((p) => p.id === id))
-      .filter((p): p is NonNullable<typeof p> => Boolean(p)),
-    [PRODUCTS]
-  );
+  const [heroSearch, setHeroSearch] = useState('');
 
   const gridProducts = useMemo(() => {
     const list = tab === 'top' ? PRODUCTS.filter((p) => p.is_popular) : PRODUCTS.filter((p) => p.category_id === tab);
@@ -123,135 +118,139 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="bg-porcelain text-ink">
-      {/* ================= HERO ================= */}
+      {/* ================= HERO COMPACT : on entre directement dans la boutique ================= */}
       <section className="relative isolate overflow-hidden bg-ink">
         <img
           src={heroBannerImg}
           alt=""
           aria-hidden="true"
-          className="absolute inset-y-0 right-0 -z-10 h-full w-full lg:w-[58%] object-cover object-center opacity-40 lg:opacity-90"
+          className="absolute inset-y-0 right-0 -z-10 h-full w-full lg:w-[45%] object-cover object-center opacity-25 lg:opacity-80"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/85 via-ink/75 to-ink/95 lg:bg-gradient-to-r lg:from-ink lg:from-45% lg:via-ink/80 lg:to-ink/20" />
+        <div className="absolute inset-0 -z-10 bg-ink/70 lg:bg-gradient-to-r lg:from-ink lg:from-55% lg:via-ink/85 lg:to-ink/30" />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-36 pb-16 sm:pt-44 sm:pb-24 lg:min-h-[88vh] grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
-          <div className="text-white">
-            <p className="text-sm font-medium text-white/75">Boutique d’électronique à {SHOP.city}</p>
-            <h1 className="mt-4 text-[40px] leading-[1.05] sm:text-6xl lg:text-[66px] max-w-[15ch]">
-              Votre téléphone et ses accessoires, <span className="text-brand">au même endroit.</span>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-8 sm:pt-32 sm:pb-9">
+          <div className="max-w-2xl text-white">
+            <p className="text-sm font-medium text-white/70">Boutique d’électronique à {SHOP.city}</p>
+            <h1 className="mt-2 text-[28px] sm:text-[44px] leading-[1.08]">
+              Téléphones, accessoires et gadgets, <span className="text-brand">livrés à Douala.</span>
             </h1>
-            <p className="mt-6 text-base sm:text-lg text-white/80 leading-relaxed max-w-xl">
-              Smartphones neufs, pochettes, verres trempés, montres connectées, chargeurs auto et gadgets. Conseil honnête,
-              livraison rapide à Douala et paiement à la réception.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => navigate('/smartphones')}
-                className="inline-flex items-center justify-center rounded-full bg-brand hover:bg-brand-hover px-6 py-3.5 text-sm font-semibold text-white transition-colors cursor-pointer"
-              >
-                Voir les téléphones
-              </button>
-              <a
-                href={whatsappLink('Bonjour SBS SARL, je cherche un téléphone / un accessoire.')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 hover:border-white px-6 py-3.5 text-sm font-semibold text-white transition-colors"
-              >
-                <MessageCircle className="w-4 h-4" />
-                Demander conseil
-              </a>
-            </div>
-            <ul className="mt-8 space-y-2.5 text-sm text-white/80">
-              {['Téléphones neufs et scellés, testés devant vous', 'Pose du verre trempé offerte', 'Espèces, Orange Money ou MTN MoMo'].map((t) => (
-                <li key={t} className="flex items-center gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-gold/25 text-gold-light flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3" strokeWidth={3} />
-                  </span>
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
 
-          {/* Carte flottante : les plus demandés */}
-          <div className="bg-white rounded-3xl p-6 sm:p-7 shadow-2xl shadow-black/30 text-ink">
-            <h2 className="text-xl">Les plus demandés</h2>
-            <div className="mt-4 divide-y divide-ink/10">
-              {heroPicks.map((p) => (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (heroSearch.trim().length > 1) {
+                  setSearchQuery(heroSearch.trim());
+                  setIsSearchOpen(true);
+                  window.scrollTo({ top: 0 });
+                }
+              }}
+              className="mt-5 relative max-w-xl"
+              role="search"
+            >
+              <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-ink/40" />
+              <button type="submit" className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full bg-brand hover:bg-brand-hover text-white text-sm font-semibold px-5 py-2.5 transition-colors cursor-pointer">Rechercher</button>
+              <input
+                type="search"
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
+                placeholder="Que cherchez-vous ? iPhone, verre trempé, chargeur auto…"
+                className="w-full rounded-full bg-white text-ink pl-12 pr-32 py-3.5 text-sm sm:text-base placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-brand"
+                aria-label="Rechercher un produit"
+              />
+            </form>
+
+            <div className="mt-4 -mx-4 px-4 sm:mx-0 sm:px-0 flex gap-2 overflow-x-auto sm:flex-wrap no-scrollbar">
+              {CATEGORIES.map((c) => (
                 <button
-                  key={p.id}
-                  onClick={() => navigate(`/produit/${p.slug}`)}
-                  className="w-full flex items-center gap-3 py-3 text-left cursor-pointer group"
+                  key={c.id}
+                  onClick={() => navigate(`/${c.slug}`)}
+                  className="shrink-0 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 px-4 py-2 text-sm text-white transition-colors cursor-pointer"
                 >
-                  <img src={p.image} alt="" className="w-14 h-14 rounded-xl object-cover bg-[#F4F2EF] shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[11px] text-ink/50">{p.sub_category}</p>
-                    <p className="text-sm font-semibold leading-snug line-clamp-1 group-hover:text-brand-dark">{p.name}</p>
-                  </div>
-                  <span className="text-[11px] font-semibold text-[#1F7A5C] bg-[#E8F5EF] rounded-full px-2 py-0.5 shrink-0">En stock</span>
+                  {c.name}
                 </button>
               ))}
+              <button
+                onClick={() => navigate('/promotions')}
+                className="shrink-0 rounded-full bg-brand hover:bg-brand-hover px-4 py-2 text-sm font-semibold text-white transition-colors cursor-pointer"
+              >
+                Promotions
+              </button>
             </div>
-            <div className="mt-4 rounded-2xl bg-blush px-4 py-3.5">
-              <p className="text-sm text-ink/70">
-                À partir de{' '}
-                <span className="font-display text-2xl font-semibold text-brand-dark">
-                  {formatPrice(Math.min(...PRODUCTS.map((p) => p.price)))}
+          </div>
+
+          <ul className="hidden sm:flex mt-6 pt-4 border-t border-white/10 flex-wrap gap-x-8 gap-y-2 text-sm text-white/75">
+            {['Téléphones neufs et scellés', 'Livraison 24 h à Douala', 'Pose du verre offerte', 'Espèces, Orange Money, MTN MoMo'].map((t) => (
+              <li key={t} className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-gold-light" strokeWidth={3} />
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ================= PRODUITS ================= */}
+      <Section id="produits" className="bg-porcelain pt-8! sm:pt-10!">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h2 className="text-2xl sm:text-3xl">Nos produits phares</h2>
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+            {[{ id: 'top' as const, label: 'Top ventes' }, ...CATEGORIES.map((c) => ({ id: c.id, label: c.name }))].map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors cursor-pointer ${
+                  tab === t.id ? 'bg-ink text-white' : 'text-ink/70 hover:bg-blush'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+          {gridProducts.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </Section>
+
+      {/* ================= OFFRES ================= */}
+      <Section id="offres" className="bg-blush">
+        <Heading title="Les offres du moment" subtitle="De vraies remises, dans la limite des stocks disponibles." />
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {deals.map((p, i) => (
+            <button
+              key={p.id}
+              onClick={() => navigate(`/produit/${p.slug}`)}
+              className="text-left bg-white rounded-2xl p-5 border border-ink/5 hover:border-ink/15 transition-colors cursor-pointer flex flex-col"
+            >
+              <div className="flex items-center justify-between">
+                <span className="w-7 h-7 rounded-full bg-blush text-brand-dark text-xs font-semibold flex items-center justify-center">{i + 1}</span>
+                <span className="text-xs font-semibold text-brand-dark">
+                  -{Math.round(((p.old_price! - p.price) / p.old_price!) * 100)}%
                 </span>
-              </p>
-              <p className="text-xs text-ink/50 mt-0.5">Livraison offerte à Douala dès 50 000 FCFA</p>
-            </div>
+              </div>
+              <p className="mt-4 text-sm text-ink/60 line-clamp-1">{p.name}</p>
+              <p className="mt-1 font-display text-3xl font-semibold">{formatPrice(p.price)}</p>
+              <p className="mt-1 text-sm text-ink/45 line-through">{formatPrice(p.old_price!)}</p>
+            </button>
+          ))}
+          <div className="rounded-2xl bg-brand text-white p-5 flex flex-col">
+            <p className="text-sm text-white/85">Code de bienvenue</p>
+            <p className="mt-1 font-display text-4xl font-semibold">{SHOP.promoCode}</p>
+            <p className="mt-1 text-sm text-white/85">-10 % sur votre commande</p>
             <button
               onClick={() => navigate('/promotions')}
-              className="mt-5 w-full rounded-full bg-ink hover:bg-black text-white text-sm font-semibold py-3.5 transition-colors cursor-pointer"
+              className="mt-6 self-start inline-flex items-center gap-1.5 rounded-full bg-white text-ink text-sm font-semibold px-5 py-2.5 hover:bg-blush transition-colors cursor-pointer"
             >
-              Voir les promotions
+              Voir toutes les promos
             </button>
           </div>
         </div>
-      </section>
-
-      {/* ================= CHIFFRES CLÉS ================= */}
-      <section className="bg-blush">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {[
-            { v: `${CATEGORIES.length} rayons`, l: 'Téléphones, protection, montres, chargeurs & gadgets' },
-            { v: '24 h', l: 'Délai de livraison à Douala' },
-            { v: '0 FCFA', l: 'Pour la pose de votre verre trempé' },
-            { v: '3 moyens', l: 'Espèces, Orange Money et MTN MoMo' },
-          ].map((s) => (
-            <div key={s.v}>
-              <p className="font-display text-3xl sm:text-4xl font-semibold text-brand-dark">{s.v}</p>
-              <p className="mt-1.5 text-sm text-ink/60 leading-snug max-w-[24ch]">{s.l}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= COMMENT COMMANDER ================= */}
-      <Section id="commander" className="bg-ink">
-        <Heading tone="dark" title="Comment commander" subtitle="Quatre étapes simples. Vous ne payez qu’après avoir vu votre produit." />
-        <ol className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="relative">
-              <div className="flex items-center gap-4">
-                <span className="w-10 h-10 rounded-full bg-brand text-white font-semibold flex items-center justify-center shrink-0">{i + 1}</span>
-                {i < STEPS.length - 1 && <span className="hidden lg:block h-px flex-1 bg-white/15" />}
-              </div>
-              <h3 className="mt-5 font-display text-lg font-semibold text-white">{s.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/65">{s.text}</p>
-            </li>
-          ))}
-        </ol>
-        <button
-          onClick={() => navigate('/smartphones')}
-          className="mt-12 inline-flex items-center rounded-full bg-white hover:bg-blush px-6 py-3 text-sm font-semibold text-ink transition-colors cursor-pointer"
-        >
-          Commencer mes achats
-        </button>
       </Section>
 
       {/* ================= RAYONS ================= */}
-      <Section id="rayons">
+      <Section id="rayons" className="bg-white">
         <Heading title="Trouvez ce qu’il vous faut" subtitle="Le téléphone, sa protection, sa recharge et ses compagnons connectés." />
         <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {CATEGORIES.map((c) => (
@@ -293,64 +292,27 @@ export const HomePage: React.FC = () => {
         </div>
       </Section>
 
-      {/* ================= PRODUITS ================= */}
-      <Section id="produits" className="bg-white">
-        <div className="flex flex-col gap-6">
-          <Heading title="Nos produits phares" subtitle="Les références que nos clients achètent le plus souvent." />
-          <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
-            {[{ id: 'top' as const, label: 'Top ventes' }, ...CATEGORIES.map((c) => ({ id: c.id, label: c.name }))].map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors cursor-pointer ${
-                  tab === t.id ? 'bg-ink text-white' : 'text-ink/70 hover:bg-blush'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
-          {gridProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      </Section>
-
-      {/* ================= OFFRES ================= */}
-      <Section id="offres" className="bg-blush">
-        <Heading title="Les offres du moment" subtitle="De vraies remises, dans la limite des stocks disponibles." />
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {deals.map((p, i) => (
-            <button
-              key={p.id}
-              onClick={() => navigate(`/produit/${p.slug}`)}
-              className="text-left bg-white rounded-2xl p-5 border border-ink/5 hover:border-ink/15 transition-colors cursor-pointer flex flex-col"
-            >
-              <div className="flex items-center justify-between">
-                <span className="w-7 h-7 rounded-full bg-blush text-brand-dark text-xs font-semibold flex items-center justify-center">{i + 1}</span>
-                <span className="text-xs font-semibold text-brand-dark">
-                  -{Math.round(((p.old_price! - p.price) / p.old_price!) * 100)}%
-                </span>
+      {/* ================= COMMENT COMMANDER ================= */}
+      <Section id="commander" className="bg-ink">
+        <Heading tone="dark" title="Comment commander" subtitle="Quatre étapes simples. Vous ne payez qu’après avoir vu votre produit." />
+        <ol className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+          {STEPS.map((s, i) => (
+            <li key={s.title} className="relative">
+              <div className="flex items-center gap-4">
+                <span className="w-10 h-10 rounded-full bg-brand text-white font-semibold flex items-center justify-center shrink-0">{i + 1}</span>
+                {i < STEPS.length - 1 && <span className="hidden lg:block h-px flex-1 bg-white/15" />}
               </div>
-              <p className="mt-4 text-sm text-ink/60 line-clamp-1">{p.name}</p>
-              <p className="mt-1 font-display text-3xl font-semibold">{formatPrice(p.price)}</p>
-              <p className="mt-1 text-sm text-ink/45 line-through">{formatPrice(p.old_price!)}</p>
-            </button>
+              <h3 className="mt-5 font-display text-lg font-semibold text-white">{s.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/65">{s.text}</p>
+            </li>
           ))}
-          <div className="rounded-2xl bg-brand text-white p-5 flex flex-col">
-            <p className="text-sm text-white/85">Code de bienvenue</p>
-            <p className="mt-1 font-display text-4xl font-semibold">{SHOP.promoCode}</p>
-            <p className="mt-1 text-sm text-white/85">-10 % sur votre commande</p>
-            <button
-              onClick={() => navigate('/promotions')}
-              className="mt-6 self-start inline-flex items-center gap-1.5 rounded-full bg-white text-ink text-sm font-semibold px-5 py-2.5 hover:bg-blush transition-colors cursor-pointer"
-            >
-              Voir toutes les promos
-            </button>
-          </div>
-        </div>
+        </ol>
+        <button
+          onClick={() => navigate('/smartphones')}
+          className="mt-12 inline-flex items-center rounded-full bg-white hover:bg-blush px-6 py-3 text-sm font-semibold text-ink transition-colors cursor-pointer"
+        >
+          Commencer mes achats
+        </button>
       </Section>
 
       {/* ================= INCLUS ================= */}
