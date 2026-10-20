@@ -63,8 +63,9 @@ export async function currentAdmin(): Promise<{ email: string; isAdmin: boolean 
   const { data } = await sb.auth.getSession();
   const user = data.session?.user;
   if (!user) return null;
-  const { data: isAdmin } = await sb.rpc('is_admin');
-  return { email: user.email ?? '', isAdmin: Boolean(isAdmin) };
+  // La politique RLS n'autorise un utilisateur qu'à lire sa propre ligne admin_users
+  const { data: row } = await sb.from('admin_users').select('user_id').eq('user_id', user.id).maybeSingle();
+  return { email: user.email ?? '', isAdmin: Boolean(row) };
 }
 
 export async function listOrders(): Promise<AdminOrder[]> {

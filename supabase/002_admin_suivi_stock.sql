@@ -8,6 +8,13 @@
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS options JSONB;
 
 -- 2. Administrateurs -----------------------------------------------------------
+-- Les fonctions internes vivent dans un schéma « private » non exposé par l'API.
+-- (Nettoyage des anciennes versions publiques : supprime aussi leurs politiques, recréées plus bas.)
+DROP FUNCTION IF EXISTS public.is_admin() CASCADE;
+DROP FUNCTION IF EXISTS public.order_is_recent(TEXT) CASCADE;
+CREATE SCHEMA IF NOT EXISTS private;
+GRANT USAGE ON SCHEMA private TO anon, authenticated;
+
 CREATE TABLE IF NOT EXISTS public.admin_users (
     user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -18,62 +25,63 @@ DROP POLICY IF EXISTS "Admin reads own row" ON public.admin_users;
 CREATE POLICY "Admin reads own row" ON public.admin_users FOR SELECT TO authenticated
     USING (user_id = (SELECT auth.uid()));
 
-CREATE OR REPLACE FUNCTION public.is_admin()
+CREATE OR REPLACE FUNCTION private.is_admin()
 RETURNS BOOLEAN LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
     SELECT EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = (SELECT auth.uid()));
 $$;
-REVOKE EXECUTE ON FUNCTION public.is_admin() FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
+REVOKE EXECUTE ON FUNCTION private.is_admin() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION private.is_admin() TO authenticated;
 
 -- Droits complets des administrateurs
 DROP POLICY IF EXISTS "Admin manage products" ON public.products;
 CREATE POLICY "Admin manage products" ON public.products FOR ALL TO authenticated
-    USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
+    USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
 
 DROP POLICY IF EXISTS "Admin manage categories" ON public.categories;
 CREATE POLICY "Admin manage categories" ON public.categories FOR ALL TO authenticated
-    USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
+    USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
 
 DROP POLICY IF EXISTS "Admin read orders" ON public.orders;
-CREATE POLICY "Admin read orders" ON public.orders FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin read orders" ON public.orders FOR SELECT TO authenticated USING ((SELECT private.is_admin()));
 DROP POLICY IF EXISTS "Admin update orders" ON public.orders;
 CREATE POLICY "Admin update orders" ON public.orders FOR UPDATE TO authenticated
-    USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
+    USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
 DROP POLICY IF EXISTS "Admin delete orders" ON public.orders;
-CREATE POLICY "Admin delete orders" ON public.orders FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin delete orders" ON public.orders FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 DROP POLICY IF EXISTS "Admin read order items" ON public.order_items;
-CREATE POLICY "Admin read order items" ON public.order_items FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin read order items" ON public.order_items FOR SELECT TO authenticated USING ((SELECT private.is_admin()));
 
 DROP POLICY IF EXISTS "Admin read reviews" ON public.reviews;
-CREATE POLICY "Admin read reviews" ON public.reviews FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin read reviews" ON public.reviews FOR SELECT TO authenticated USING ((SELECT private.is_admin()));
 DROP POLICY IF EXISTS "Admin update reviews" ON public.reviews;
 CREATE POLICY "Admin update reviews" ON public.reviews FOR UPDATE TO authenticated
-    USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
+    USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
 DROP POLICY IF EXISTS "Admin delete reviews" ON public.reviews;
-CREATE POLICY "Admin delete reviews" ON public.reviews FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin delete reviews" ON public.reviews FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 DROP POLICY IF EXISTS "Admin manage promotions" ON public.promotions;
 CREATE POLICY "Admin manage promotions" ON public.promotions FOR ALL TO authenticated
-    USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
+    USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
 
 DROP POLICY IF EXISTS "Admin manage banners" ON public.banners;
 CREATE POLICY "Admin manage banners" ON public.banners FOR ALL TO authenticated
-    USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
+    USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
 
 -- 3. Lignes de commande : uniquement pour une commande créée il y a moins de 15 min
-CREATE OR REPLACE FUNCTION public.order_is_recent(p_order_id TEXT)
+CREATE OR REPLACE FUNCTION private.order_is_recent(p_order_id TEXT)
 RETURNS BOOLEAN LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
     SELECT EXISTS (
         SELECT 1 FROM public.orders
         WHERE id = p_order_id AND created_at > now() - interval '15 minutes'
     );
 $$;
-GRANT EXECUTE ON FUNCTION public.order_is_recent(TEXT) TO anon, authenticated;
+REVOKE EXECUTE ON FUNCTION private.order_is_recent(TEXT) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION private.order_is_recent(TEXT) TO anon, authenticated;
 
 DROP POLICY IF EXISTS "Public Create Order Items" ON public.order_items;
 CREATE POLICY "Public Create Order Items" ON public.order_items FOR INSERT TO anon, authenticated
-    WITH CHECK (quantity > 0 AND quantity <= 20 AND public.order_is_recent(order_id));
+    WITH CHECK (quantity > 0 AND quantity <= 20 AND private.order_is_recent(order_id));
 
 -- 4. Stock automatique ------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.decrement_stock()
@@ -111,6 +119,8 @@ CREATE TRIGGER trg_orders_restock AFTER UPDATE OF status ON public.orders
     FOR EACH ROW EXECUTE FUNCTION public.restock_cancelled_order();
 
 -- 5. Suivi de commande sans compte (n° de commande + 8 derniers chiffres du téléphone)
+-- Volontairement appelable sans connexion (avertissement « Public Can Execute » attendu) :
+-- ne renvoie une commande que si le numéro ET le téléphone correspondent.
 CREATE OR REPLACE FUNCTION public.track_order(p_order_id TEXT, p_phone TEXT)
 RETURNS TABLE (
     id TEXT, status TEXT, created_at TIMESTAMPTZ, total_amount INT,
@@ -136,13 +146,13 @@ ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = 5242880,
 
 DROP POLICY IF EXISTS "Admin upload product images" ON storage.objects;
 CREATE POLICY "Admin upload product images" ON storage.objects FOR INSERT TO authenticated
-    WITH CHECK (bucket_id = 'products' AND (SELECT public.is_admin()));
+    WITH CHECK (bucket_id = 'products' AND (SELECT private.is_admin()));
 DROP POLICY IF EXISTS "Admin update product images" ON storage.objects;
 CREATE POLICY "Admin update product images" ON storage.objects FOR UPDATE TO authenticated
-    USING (bucket_id = 'products' AND (SELECT public.is_admin()));
+    USING (bucket_id = 'products' AND (SELECT private.is_admin()));
 DROP POLICY IF EXISTS "Admin delete product images" ON storage.objects;
 CREATE POLICY "Admin delete product images" ON storage.objects FOR DELETE TO authenticated
-    USING (bucket_id = 'products' AND (SELECT public.is_admin()));
+    USING (bucket_id = 'products' AND (SELECT private.is_admin()));
 
 -- ============================================================================
 -- Pour nommer un administrateur (après avoir créé l'utilisateur dans
