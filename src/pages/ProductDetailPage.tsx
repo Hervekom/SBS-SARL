@@ -136,25 +136,25 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
   };
 
   return (
-    <div className="py-6 sm:py-10 bg-[#FFFFFF] min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
+    <div className="py-6 sm:py-10 bg-porcelain min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10 sm:space-y-12">
         
         {/* ======================================================== */}
         {/* FIL D'ARIANE (BREADCRUMB)                                */}
         {/* ======================================================== */}
         <nav className="flex items-center gap-2 text-xs text-neutral-500">
-          <button onClick={() => navigate('/')} className="hover:text-[#111111] transition-colors cursor-pointer">
+          <button onClick={() => navigate('/')} className="hover:text-ink transition-colors cursor-pointer">
             Accueil
           </button>
           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
           <button
             onClick={() => navigate(`/${product.category_id || product.category}`)}
-            className="hover:text-[#111111] transition-colors cursor-pointer"
+            className="hover:text-ink transition-colors cursor-pointer"
           >
             {category?.name || 'Rayon'}
           </button>
           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-          <span className="text-[#111111] font-semibold truncate max-w-xs">{product.name}</span>
+          <span className="text-ink font-semibold truncate max-w-xs">{product.name}</span>
         </nav>
 
         {/* ======================================================== */}
@@ -170,7 +170,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             
             {/* Conteneur Image Principale */}
             <div
-              className="relative aspect-4/3 sm:aspect-[4/3] w-full rounded-3xl overflow-hidden bg-[#F6F6F6] border border-[#EAEAEA] flex items-center justify-center p-4 group select-none shadow-xs"
+              className="relative aspect-4/3 sm:aspect-[4/3] w-full rounded-3xl overflow-hidden bg-[#F4F2EF] border border-ink/10 flex items-center justify-center p-4 group select-none shadow-xs"
               onMouseEnter={() => setIsZooming(true)}
               onMouseLeave={() => setIsZooming(false)}
               onMouseMove={handleMouseMove}
@@ -192,7 +192,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
               {/* Badge d'état si présent */}
               {product.badge && (
-                <span className="absolute top-4 left-4 text-xs font-bold uppercase tracking-wider px-3 py-1.5 bg-[#111111] text-[#F26B1D] rounded-xl shadow-xs z-10">
+                <span className="absolute top-4 left-4 text-xs font-bold uppercase tracking-wider px-3 py-1.5 bg-ink text-brand rounded-xl shadow-xs z-10">
                   {product.badge}
                 </span>
               )}
@@ -201,7 +201,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
                 <button
                   onClick={() => setIsFullscreen(true)}
-                  className="p-2.5 rounded-full bg-white/90 hover:bg-[#111111] hover:text-white text-neutral-700 shadow-xs transition-colors cursor-pointer"
+                  className="p-2.5 rounded-full bg-white/90 hover:bg-ink hover:text-white text-neutral-700 shadow-xs transition-colors cursor-pointer"
                   title="Afficher en plein écran"
                   aria-label="Plein écran"
                 >
@@ -212,13 +212,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                   onClick={() => toggleWishlist(product.id)}
                   className={`p-2.5 rounded-full transition-all cursor-pointer ${
                     isFavorited
-                      ? 'bg-[#111111] text-[#F26B1D] shadow-md scale-105'
-                      : 'bg-white/90 hover:bg-white text-neutral-700 hover:text-[#111111] shadow-xs'
+                      ? 'bg-ink text-brand shadow-md scale-105'
+                      : 'bg-white/90 hover:bg-white text-neutral-700 hover:text-ink shadow-xs'
                   }`}
                   title={isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                   aria-label="Favori"
                 >
-                  <Heart className={`w-4 h-4 transition-transform active:scale-90 ${isFavorited ? 'fill-[#F26B1D] text-[#F26B1D]' : 'text-neutral-600 fill-none'}`} />
+                  <Heart className={`w-4 h-4 transition-transform active:scale-90 ${isFavorited ? 'fill-brand text-brand' : 'text-neutral-600 fill-none'}`} />
                 </button>
               </div>
 
@@ -230,7 +230,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                       e.stopPropagation();
                       prevImage();
                     }}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-[#111111] hover:text-white text-[#111111] flex items-center justify-center shadow-md transition-all cursor-pointer opacity-80 group-hover:opacity-100"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-ink hover:text-white text-ink flex items-center justify-center shadow-md transition-all cursor-pointer opacity-80 group-hover:opacity-100"
                     aria-label="Image précédente"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -241,7 +241,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                       e.stopPropagation();
                       nextImage();
                     }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-[#111111] hover:text-white text-[#111111] flex items-center justify-center shadow-md transition-all cursor-pointer opacity-80 group-hover:opacity-100"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-ink hover:text-white text-ink flex items-center justify-center shadow-md transition-all cursor-pointer opacity-80 group-hover:opacity-100"
                     aria-label="Image suivante"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -250,8 +250,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               )}
 
               {/* Indicateur de zoom au survol */}
-              <div className="absolute bottom-3 right-3 bg-white/80 backdrop-blur-xs text-[11px] text-neutral-600 px-2.5 py-1 rounded-lg border border-[#EAEAEA] pointer-events-none flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ZoomIn className="w-3.5 h-3.5 text-[#F26B1D]" />
+              <div className="absolute bottom-3 right-3 bg-white/80 backdrop-blur-xs text-[11px] text-neutral-600 px-2.5 py-1 rounded-lg border border-ink/10 pointer-events-none flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                <ZoomIn className="w-3.5 h-3.5 text-brand" />
                 <span className="hidden sm:inline">Survoler pour zoomer</span>
               </div>
             </div>
@@ -263,10 +263,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                   <button
                     key={idx}
                     onClick={() => setActiveImgIndex(idx)}
-                    className={`relative w-20 h-20 sm:w-22 sm:h-22 rounded-2xl overflow-hidden bg-[#F6F6F6] p-1.5 border-2 transition-all cursor-pointer shrink-0 ${
+                    className={`relative w-20 h-20 sm:w-22 sm:h-22 rounded-2xl overflow-hidden bg-[#F4F2EF] p-1.5 border-2 transition-all cursor-pointer shrink-0 ${
                       activeImgIndex === idx
-                        ? 'border-[#F26B1D] shadow-md scale-102 bg-white'
-                        : 'border-[#EAEAEA] opacity-75 hover:opacity-100'
+                        ? 'border-brand shadow-md scale-102 bg-white'
+                        : 'border-ink/10 opacity-75 hover:opacity-100'
                     }`}
                   >
                     <img
@@ -286,12 +286,12 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
           {/* Disponibilité | Description | Quantité | Ajouter panier  */}
           {/* | Acheter maintenant                                    */}
           {/* ======================================================== */}
-          <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-[#EAEAEA] space-y-6 shadow-xs text-left">
+          <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-ink/10 space-y-6 shadow-xs text-left">
             
             <div className="space-y-2">
               {/* 1. Catégorie & Badge officiel */}
               <div className="flex items-center justify-between text-xs">
-                <span className="uppercase font-bold tracking-widest text-[#C2410C]">
+                <span className="uppercase font-bold tracking-widest text-brand-dark">
                   {product.sub_category || product.subCategory}
                 </span>
                 
@@ -303,18 +303,18 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               </div>
 
               {/* 2. Nom du Produit */}
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111111] leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-semibold text-ink leading-tight">
                 {product.name}
               </h1>
 
               {/* 3. Évaluation */}
               <div className="flex items-center gap-2 pt-0.5">
-                <div className="flex text-[#D4A017]">
+                <div className="flex text-gold">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
-                        i < Math.floor(product.rating || 5) ? 'fill-[#F26B1D]' : 'text-neutral-300'
+                        i < Math.floor(product.rating || 5) ? 'fill-brand' : 'text-neutral-300'
                       }`}
                     />
                   ))}
@@ -329,13 +329,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             </div>
 
             {/* 4. Prix & ancien prix en FCFA */}
-            <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#EEEEEE] flex items-baseline justify-between">
+            <div className="p-4 rounded-2xl bg-porcelain border border-ink/5 flex items-baseline justify-between">
               <div>
                 <span className="text-[11px] text-neutral-500 uppercase font-semibold block">
                   Prix SBS
                 </span>
                 <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-[#111111] font-mono tabular-nums">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-ink font-mono tabular-nums">
                     {formatPrice(product.price)}
                   </span>
                 </div>
@@ -363,20 +363,20 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               
               {/* Sélecteur de Quantité */}
               <div className="flex items-center gap-3">
-                <div className="flex items-center border border-[#EAEAEA] rounded-xl bg-[#F6F6F6] px-3 py-2 shrink-0">
+                <div className="flex items-center border border-ink/10 rounded-xl bg-[#F4F2EF] px-3 py-2 shrink-0">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-1 hover:text-[#F26B1D] font-bold cursor-pointer text-xs"
+                    className="p-1 hover:text-brand font-bold cursor-pointer text-xs"
                     aria-label="Diminuer la quantité"
                   >
                     -
                   </button>
-                  <span className="px-3 text-xs sm:text-sm font-mono font-bold text-[#111111]">
+                  <span className="px-3 text-xs sm:text-sm font-mono font-bold text-ink">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="p-1 hover:text-[#F26B1D] font-bold cursor-pointer text-xs"
+                    className="p-1 hover:text-brand font-bold cursor-pointer text-xs"
                     aria-label="Augmenter la quantité"
                   >
                     +
@@ -386,9 +386,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                 {/* 7. Bouton : Ajouter au panier */}
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3.5 bg-white hover:bg-[#F6F6F6] text-[#111111] border-2 border-[#111111] font-bold text-xs sm:text-sm rounded-xl tracking-wide transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer group"
+                  className="flex-1 py-3.5 bg-white hover:bg-[#F4F2EF] text-ink border-2 border-ink font-bold text-xs sm:text-sm rounded-xl tracking-wide transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer group"
                 >
-                  <ShoppingBag className="w-4 h-4 text-[#F26B1D] group-hover:scale-110 transition-transform" />
+                  <ShoppingBag className="w-4 h-4 text-brand group-hover:scale-110 transition-transform" />
                   <span>Ajouter au panier</span>
                 </button>
               </div>
@@ -396,9 +396,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               {/* 8. Bouton : Acheter maintenant (Direct Checkout) */}
               <button
                 onClick={handleBuyNow}
-                className="w-full py-4 bg-[#111111] hover:bg-[#222222] text-[#FFFFFF] font-bold text-sm rounded-xl tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer group"
+                className="w-full py-4 bg-ink hover:bg-black text-white font-bold text-sm rounded-xl tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer group"
               >
-                <Zap className="w-4 h-4 text-[#F26B1D] fill-[#F26B1D]" />
+                <Zap className="w-4 h-4 text-brand fill-brand" />
                 <span>Acheter maintenant</span>
               </button>
 
@@ -421,7 +421,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               <div className="flex items-center justify-between text-xs text-neutral-500 pt-1">
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-1.5 hover:text-[#111111] transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 hover:text-ink transition-colors cursor-pointer"
                 >
                   <Share2 className="w-3.5 h-3.5" />
                   <span>{copiedLink ? 'Lien copié !' : 'Partager'}</span>
@@ -431,20 +431,20 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             </div>
 
             {/* Garanties Officielles */}
-            <div className="pt-4 border-t border-[#F0F0F0] grid grid-cols-3 gap-2 text-center text-[11px] text-neutral-600">
+            <div className="pt-4 border-t border-ink/5 grid grid-cols-3 gap-2 text-center text-[11px] text-neutral-600">
               <div className="space-y-1">
-                <ShieldCheck className="w-4 h-4 text-[#F26B1D] mx-auto" />
-                <p className="font-semibold text-[#111111]">Neuf & garanti</p>
+                <ShieldCheck className="w-4 h-4 text-brand mx-auto" />
+                <p className="font-semibold text-ink">Neuf & garanti</p>
                 <p className="text-[10px] text-neutral-400">Garantie vérifiée</p>
               </div>
               <div className="space-y-1">
-                <Truck className="w-4 h-4 text-[#F26B1D] mx-auto" />
-                <p className="font-semibold text-[#111111]">Livraison 24h Douala</p>
+                <Truck className="w-4 h-4 text-brand mx-auto" />
+                <p className="font-semibold text-ink">Livraison 24h Douala</p>
                 <p className="text-[10px] text-neutral-400">En 24h / 48h</p>
               </div>
               <div className="space-y-1">
-                <RotateCcw className="w-4 h-4 text-[#F26B1D] mx-auto" />
-                <p className="font-semibold text-[#111111]">Retour 7 Jours</p>
+                <RotateCcw className="w-4 h-4 text-brand mx-auto" />
+                <p className="font-semibold text-ink">Retour 7 Jours</p>
                 <p className="text-[10px] text-neutral-400">Échange simple</p>
               </div>
             </div>
@@ -457,10 +457,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
         {/* Description | Caractéristiques | Livraison | Retours |   */}
         {/* Avis clients. Accordéons sur Mobile, Onglets sur Desktop */}
         {/* ======================================================== */}
-        <div className="bg-white rounded-3xl border border-[#EAEAEA] p-6 sm:p-10 shadow-xs space-y-6 text-left">
+        <div className="bg-white rounded-3xl border border-ink/10 p-6 sm:p-10 shadow-xs space-y-6 text-left">
           
           {/* Onglets Desktop (Cachés sur mobile) */}
-          <div className="hidden md:flex items-center gap-2 border-b border-[#EAEAEA] pb-3 overflow-x-auto scrollbar-none">
+          <div className="hidden md:flex items-center gap-2 border-b border-ink/10 pb-3 overflow-x-auto scrollbar-none">
             {[
               { id: 'desc', label: 'Description Complète' },
               { id: 'specs', label: 'Caractéristiques Techniques' },
@@ -473,8 +473,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                   activeTab === tab.id
-                    ? 'bg-[#111111] text-[#F26B1D] shadow-xs'
-                    : 'text-neutral-600 hover:text-[#111111] hover:bg-[#F6F6F6]'
+                    ? 'bg-ink text-brand shadow-xs'
+                    : 'text-neutral-600 hover:text-ink hover:bg-[#F4F2EF]'
                 }`}
               >
                 {tab.label}
@@ -488,13 +488,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
           <div className="space-y-4">
             
             {/* 1. DESCRIPTION */}
-            <div className="md:border-none border border-[#EAEAEA] rounded-2xl overflow-hidden">
+            <div className="md:border-none border border-ink/10 rounded-2xl overflow-hidden">
               <button
                 onClick={() => toggleAccordion('desc')}
-                className="md:hidden w-full p-4 bg-[#FAFAFA] flex items-center justify-between text-xs font-bold text-[#111111]"
+                className="md:hidden w-full p-4 bg-porcelain flex items-center justify-between text-xs font-bold text-ink"
               >
                 <span>Description Complète</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.desc ? 'rotate-180 text-[#F26B1D]' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.desc ? 'rotate-180 text-brand' : ''}`} />
               </button>
               {(activeTab === 'desc' || openMobileAccordions.desc) && (
                 <div className="p-4 md:p-0 space-y-4 text-xs sm:text-sm text-neutral-600 leading-relaxed font-light">
@@ -507,29 +507,29 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             </div>
 
             {/* 2. CARACTÉRISTIQUES */}
-            <div className="md:border-none border border-[#EAEAEA] rounded-2xl overflow-hidden">
+            <div className="md:border-none border border-ink/10 rounded-2xl overflow-hidden">
               <button
                 onClick={() => toggleAccordion('specs')}
-                className="md:hidden w-full p-4 bg-[#FAFAFA] flex items-center justify-between text-xs font-bold text-[#111111]"
+                className="md:hidden w-full p-4 bg-porcelain flex items-center justify-between text-xs font-bold text-ink"
               >
                 <span>Caractéristiques</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.specs ? 'rotate-180 text-[#F26B1D]' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.specs ? 'rotate-180 text-brand' : ''}`} />
               </button>
               {(activeTab === 'specs' || openMobileAccordions.specs) && (
                 <div className="p-4 md:p-0 space-y-6">
                   {/* Points Clés */}
                   {product.features && product.features.length > 0 && (
                     <div className="space-y-3">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-[#C2410C]">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-brand-dark">
                         Points Forts
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         {product.features.map((feat, idx) => (
                           <div
                             key={idx}
-                            className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FFFFFF] border border-[#F0F0F0]"
+                            className="flex items-start gap-2.5 p-3 rounded-xl bg-porcelain border border-ink/5"
                           >
-                            <Check className="w-4 h-4 text-[#F26B1D] shrink-0 mt-0.5" />
+                            <Check className="w-4 h-4 text-brand shrink-0 mt-0.5" />
                             <span className="text-xs text-neutral-700">{feat}</span>
                           </div>
                         ))}
@@ -540,18 +540,18 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                   {/* Fiche Détaillée */}
                   {product.specs && Object.keys(product.specs).length > 0 && (
                     <div className="space-y-3">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-[#C2410C]">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-brand-dark">
                         Fiche Technique Officielle
                       </h4>
-                      <div className="border border-[#EAEAEA] rounded-2xl overflow-hidden divide-y divide-[#EAEAEA]">
+                      <div className="border border-ink/10 rounded-2xl overflow-hidden divide-y divide-ink/10">
                         {Object.entries(product.specs).map(([key, val], idx) => (
                           <div
                             key={idx}
                             className={`grid grid-cols-1 sm:grid-cols-3 p-3.5 text-xs ${
-                              idx % 2 === 0 ? 'bg-white' : 'bg-[#FFFFFF]'
+                              idx % 2 === 0 ? 'bg-white' : 'bg-porcelain'
                             }`}
                           >
-                            <span className="font-semibold text-[#111111]">{key}</span>
+                            <span className="font-semibold text-ink">{key}</span>
                             <span className="text-neutral-600 sm:col-span-2 font-mono">{val}</span>
                           </div>
                         ))}
@@ -563,19 +563,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             </div>
 
             {/* 3. LIVRAISON */}
-            <div className="md:border-none border border-[#EAEAEA] rounded-2xl overflow-hidden">
+            <div className="md:border-none border border-ink/10 rounded-2xl overflow-hidden">
               <button
                 onClick={() => toggleAccordion('shipping')}
-                className="md:hidden w-full p-4 bg-[#FAFAFA] flex items-center justify-between text-xs font-bold text-[#111111]"
+                className="md:hidden w-full p-4 bg-porcelain flex items-center justify-between text-xs font-bold text-ink"
               >
                 <span>Livraison</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.shipping ? 'rotate-180 text-[#F26B1D]' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.shipping ? 'rotate-180 text-brand' : ''}`} />
               </button>
               {(activeTab === 'shipping' || openMobileAccordions.shipping) && (
                 <div className="p-4 md:p-0 space-y-3 text-xs text-neutral-600 leading-relaxed font-light">
-                  <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#EAEAEA] space-y-2">
-                    <h4 className="font-bold text-xs text-[#111111] flex items-center gap-2">
-                      <Truck className="w-4 h-4 text-[#F26B1D]" />
+                  <div className="p-4 rounded-xl bg-porcelain border border-ink/10 space-y-2">
+                    <h4 className="font-bold text-xs text-ink flex items-center gap-2">
+                      <Truck className="w-4 h-4 text-brand" />
                       Livraison au Cameroun
                     </h4>
                     <p>
@@ -593,19 +593,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             </div>
 
             {/* 4. RETOURS */}
-            <div className="md:border-none border border-[#EAEAEA] rounded-2xl overflow-hidden">
+            <div className="md:border-none border border-ink/10 rounded-2xl overflow-hidden">
               <button
                 onClick={() => toggleAccordion('returns')}
-                className="md:hidden w-full p-4 bg-[#FAFAFA] flex items-center justify-between text-xs font-bold text-[#111111]"
+                className="md:hidden w-full p-4 bg-porcelain flex items-center justify-between text-xs font-bold text-ink"
               >
                 <span>Retours</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.returns ? 'rotate-180 text-[#F26B1D]' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.returns ? 'rotate-180 text-brand' : ''}`} />
               </button>
               {(activeTab === 'returns' || openMobileAccordions.returns) && (
                 <div className="p-4 md:p-0 space-y-3 text-xs text-neutral-600 leading-relaxed font-light">
-                  <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#EAEAEA] space-y-2">
-                    <h4 className="font-bold text-xs text-[#111111] flex items-center gap-2">
-                      <RotateCcw className="w-4 h-4 text-[#F26B1D]" />
+                  <div className="p-4 rounded-xl bg-porcelain border border-ink/10 space-y-2">
+                    <h4 className="font-bold text-xs text-ink flex items-center gap-2">
+                      <RotateCcw className="w-4 h-4 text-brand" />
                       Échange sous 7 jours
                     </h4>
                     <p>
@@ -617,24 +617,24 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             </div>
 
             {/* 5. AVIS CLIENTS */}
-            <div className="md:border-none border border-[#EAEAEA] rounded-2xl overflow-hidden">
+            <div className="md:border-none border border-ink/10 rounded-2xl overflow-hidden">
               <button
                 onClick={() => toggleAccordion('reviews')}
-                className="md:hidden w-full p-4 bg-[#FAFAFA] flex items-center justify-between text-xs font-bold text-[#111111]"
+                className="md:hidden w-full p-4 bg-porcelain flex items-center justify-between text-xs font-bold text-ink"
               >
                 <span>Avis Clients ({product.review_count || product.reviewCount || 42})</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.reviews ? 'rotate-180 text-[#F26B1D]' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform ${openMobileAccordions.reviews ? 'rotate-180 text-brand' : ''}`} />
               </button>
               {(activeTab === 'reviews' || openMobileAccordions.reviews) && (
                 <div className="p-4 md:p-0 space-y-4">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#FFFFFF] border border-[#EAEAEA]">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-porcelain border border-ink/10">
                     <div>
-                      <p className="text-2xl font-extrabold text-[#111111] font-mono">
+                      <p className="text-2xl font-extrabold text-ink font-mono">
                         {(product.rating || 5).toFixed(1)} / 5
                       </p>
-                      <div className="flex text-[#D4A017] my-1">
+                      <div className="flex text-gold my-1">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 fill-[#D4A017]" />
+                          <Star key={i} className="w-4 h-4 fill-gold" />
                         ))}
                       </div>
                       <p className="text-xs text-neutral-400">
@@ -646,7 +646,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                       href={whatsappLink()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-2 bg-[#111111] text-[#F26B1D] text-xs font-bold rounded-xl hover:bg-[#222222] transition-colors"
+                      className="px-4 py-2 bg-ink text-brand text-xs font-bold rounded-xl hover:bg-black transition-colors"
                     >
                       Donner mon avis client
                     </a>
@@ -656,22 +656,22 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                     {REVIEWS.map((rev) => (
                       <div
                         key={rev.id}
-                        className="p-4 rounded-2xl border border-[#EAEAEA] bg-white space-y-1.5"
+                        className="p-4 rounded-2xl border border-ink/10 bg-white space-y-1.5"
                       >
                         <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-[#111111]">{rev.author}</span>
+                            <span className="font-bold text-ink">{rev.author}</span>
                             <span className="text-neutral-400">·</span>
                             <span className="text-neutral-500">{rev.location}</span>
                           </div>
                           <span className="text-neutral-400 font-mono text-[11px]">{rev.date}</span>
                         </div>
-                        <div className="flex text-[#D4A017]">
+                        <div className="flex text-gold">
                           {[...Array(rev.rating)].map((_, i) => (
-                            <Star key={i} className="w-3 h-3 fill-[#D4A017]" />
+                            <Star key={i} className="w-3 h-3 fill-gold" />
                           ))}
                         </div>
-                        <p className="text-xs font-bold text-[#111111]">"{rev.title}"</p>
+                        <p className="text-xs font-bold text-ink">"{rev.title}"</p>
                         <p className="text-xs text-neutral-600 font-light leading-relaxed">
                           {rev.content}
                         </p>
@@ -692,16 +692,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
           <div className="space-y-6 pt-4 text-left">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xs uppercase font-bold tracking-widest text-[#C2410C]">
+                <span className="text-xs uppercase font-bold tracking-widest text-brand-dark">
                   Dans le même univers
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold text-[#111111] mt-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-ink mt-1">
                   Vous pourriez aussi aimer
                 </h3>
               </div>
               <button
                 onClick={() => navigate(`/${product.category_id || product.category}`)}
-                className="text-xs font-bold text-[#111111] hover:text-[#C2410C] transition-colors cursor-pointer"
+                className="text-xs font-bold text-ink hover:text-brand-dark transition-colors cursor-pointer"
               >
                 Explorer tout le rayon →
               </button>
@@ -724,7 +724,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
         <div className="fixed inset-0 z-50 bg-black/95 flex flex-col justify-between p-4 sm:p-8 animate-fadeIn">
           {/* Top Bar */}
           <div className="flex items-center justify-between text-white z-10">
-            <span className="text-xs font-mono text-[#F26B1D] font-bold">
+            <span className="text-xs font-mono text-brand font-bold">
               {activeImgIndex + 1} / {galleryImages.length}
             </span>
 
@@ -734,7 +734,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
             <button
               onClick={() => setIsFullscreen(false)}
-              className="p-2.5 rounded-full bg-white/10 hover:bg-white hover:text-[#111111] text-white transition-colors cursor-pointer"
+              className="p-2.5 rounded-full bg-white/10 hover:bg-white hover:text-ink text-white transition-colors cursor-pointer"
               aria-label="Fermer le plein écran"
             >
               <X className="w-6 h-6" />
@@ -776,7 +776,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                   key={i}
                   onClick={() => setActiveImgIndex(i)}
                   className={`w-14 h-14 rounded-xl overflow-hidden p-1 border-2 transition-all cursor-pointer ${
-                    activeImgIndex === i ? 'border-[#F26B1D] scale-110 bg-white/10' : 'border-transparent opacity-60'
+                    activeImgIndex === i ? 'border-brand scale-110 bg-white/10' : 'border-transparent opacity-60'
                   }`}
                 >
                   <img src={img} alt="" className="w-full h-full object-contain" />

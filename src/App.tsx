@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { ShopProvider, useShop, useCatalog } from './context/ShopContext';
-import { AnnouncementBar } from './components/layout/AnnouncementBar';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { CartDrawer } from './components/cart/CartDrawer';
@@ -38,20 +37,20 @@ const MainContent: React.FC = () => {
     );
 
     return (
-      <main className="min-h-screen py-10 bg-[#FFFFFF]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-[#EAEAEA]">
+      <main className="min-h-screen py-10 bg-porcelain">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
+          <div className="flex items-center justify-between pb-4 border-b border-ink/10">
             <div>
-              <span className="text-xs uppercase font-bold tracking-widest text-[#C2410C]">
+              <span className="text-xs uppercase font-bold tracking-widest text-brand-dark">
                 Résultats de recherche
               </span>
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#111111]">
+              <h1 className="text-2xl sm:text-3xl font-semibold text-ink">
                 Recherche pour : "{searchQuery}"
               </h1>
             </div>
             <button
               onClick={() => setSearchQuery('')}
-              className="flex items-center gap-1 text-xs font-semibold text-neutral-500 hover:text-[#111111] bg-[#F6F6F6] px-3 py-1.5 rounded-xl transition-colors"
+              className="flex items-center gap-1 text-xs font-semibold text-neutral-500 hover:text-ink bg-[#F4F2EF] px-3 py-1.5 rounded-xl transition-colors"
             >
               <X className="w-3.5 h-3.5" />
               <span>Effacer la recherche</span>
@@ -149,20 +148,29 @@ const MainContent: React.FC = () => {
   );
 };
 
+const Shell: React.FC = () => {
+  const { currentPath, searchQuery } = useShop();
+  const isHome = currentPath === '/' && searchQuery.trim().length < 2;
+  return (
+    <div className="min-h-screen flex flex-col bg-porcelain text-ink">
+      <Header />
+      {/* L'accueil passe sous l'en-tête transparent ; les autres pages réservent sa hauteur */}
+      {!isHome && <div className="h-[104px] sm:h-[108px]" aria-hidden="true" />}
+      <div className="flex-1">
+        <MainContent />
+      </div>
+      <Footer />
+      <CartDrawer />
+      <QuickViewModal />
+      <ReviewModal />
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <ShopProvider>
-      <div className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#111111]">
-        <AnnouncementBar />
-        <Header />
-        <div className="flex-1">
-          <MainContent />
-        </div>
-        <Footer />
-        <CartDrawer />
-        <QuickViewModal />
-        <ReviewModal />
-      </div>
+      <Shell />
     </ShopProvider>
   );
 }

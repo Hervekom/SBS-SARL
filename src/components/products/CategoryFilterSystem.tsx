@@ -53,14 +53,14 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
   const chip = (selected: boolean) =>
     `px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
       selected
-        ? 'bg-[#111111] text-[#F26B1D] shadow-xs'
-        : 'bg-white border border-[#EAEAEA] text-neutral-700 hover:border-[#F26B1D]'
+        ? 'bg-ink text-brand shadow-xs'
+        : 'bg-white border border-ink/10 text-neutral-700 hover:border-brand'
     }`;
 
   return (
     <div className="space-y-4">
       {/* Barre de contrôle */}
-      <div className="bg-white rounded-2xl border border-[#EAEAEA] p-3 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
+      <div className="bg-white rounded-2xl border border-ink/10 p-3 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1 min-w-[220px]">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input
@@ -68,12 +68,12 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
             value={filters.search}
             onChange={(e) => onChange({ ...filters, search: e.target.value })}
             placeholder="Rechercher un modèle, une marque..."
-            className="w-full pl-9 pr-8 py-2 text-xs bg-[#FFFFFF] border border-[#E6E6E6] rounded-xl focus:outline-none focus:border-[#F26B1D] focus:ring-1 focus:ring-[#F26B1D] text-[#111111] placeholder-neutral-400"
+            className="w-full pl-9 pr-8 py-2 text-xs bg-porcelain border border-ink/10 rounded-xl focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand text-ink placeholder-neutral-400"
           />
           {filters.search && (
             <button
               onClick={() => onChange({ ...filters, search: '' })}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-neutral-400 hover:text-[#111111]"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-neutral-400 hover:text-ink"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -85,26 +85,26 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
             onClick={() => setDrawerOpen(true)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
               activeCount > 0
-                ? 'bg-[#111111] text-[#F26B1D] border-[#111111] shadow-xs'
-                : 'bg-[#FFFFFF] text-neutral-800 border-[#E6E6E6] hover:border-[#F26B1D]'
+                ? 'bg-ink text-brand border-ink shadow-xs'
+                : 'bg-porcelain text-neutral-800 border-ink/10 hover:border-brand'
             }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filtrer</span>
             {activeCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-[#F26B1D] text-white text-[10px] flex items-center justify-center font-bold">
+              <span className="w-4 h-4 rounded-full bg-brand text-white text-[10px] flex items-center justify-center font-bold">
                 {activeCount}
               </span>
             )}
           </button>
 
-          <div className="flex items-center gap-1.5 bg-[#FFFFFF] border border-[#E6E6E6] rounded-xl px-2.5 py-1.5">
+          <div className="flex items-center gap-1.5 bg-porcelain border border-ink/10 rounded-xl px-2.5 py-1.5">
             <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
             <span className="text-[11px] text-neutral-500 hidden sm:inline">Trier par :</span>
             <select
               value={filters.sortBy}
               onChange={(e) => onChange({ ...filters, sortBy: e.target.value as FilterState['sortBy'] })}
-              className="bg-transparent text-xs font-bold text-[#111111] focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-ink focus:outline-none cursor-pointer"
               aria-label="Trier par"
             >
               <option value="featured">Pertinence</option>
@@ -136,7 +136,7 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
         {activeAttrs.map(([key, value]) => (
           <span
             key={key}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#111111] text-[#F26B1D] text-[11px] font-medium"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-ink text-brand text-[11px] font-medium"
           >
             {key} : {value}
             <button onClick={() => toggleAttr(key, value)} className="hover:text-white" aria-label={`Retirer ${key}`}>
@@ -161,11 +161,11 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
           <div onClick={() => setDrawerOpen(false)} className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity" />
 
           <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-            <div className="w-screen max-w-md bg-[#FFFFFF] shadow-2xl flex flex-col justify-between border-l border-[#EAEAEA] animate-slide-down">
-              <div className="p-5 border-b border-[#EAEAEA] flex items-center justify-between bg-white">
+            <div className="w-screen max-w-md bg-porcelain shadow-2xl flex flex-col justify-between border-l border-ink/10 animate-slide-down">
+              <div className="p-5 border-b border-ink/10 flex items-center justify-between bg-white">
                 <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="w-4 h-4 text-[#F26B1D]" />
-                  <h3 className="text-sm font-bold text-[#111111]">Filtrer la sélection ({activeCount})</h3>
+                  <SlidersHorizontal className="w-4 h-4 text-brand" />
+                  <h3 className="text-sm font-bold text-ink">Filtrer la sélection ({activeCount})</h3>
                 </div>
                 <div className="flex items-center gap-2">
                   {activeCount > 0 && (
@@ -175,7 +175,7 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
                   )}
                   <button
                     onClick={() => setDrawerOpen(false)}
-                    className="p-1.5 text-neutral-400 hover:text-[#111111] hover:bg-[#F6F6F6] rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-neutral-400 hover:text-ink hover:bg-[#F4F2EF] rounded-lg transition-colors cursor-pointer"
                     aria-label="Fermer"
                   >
                     <X className="w-5 h-5" />
@@ -185,21 +185,21 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
 
               <div className="flex-1 overflow-y-auto p-5 space-y-6 text-left">
                 <div className="space-y-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#C2410C]">Disponibilité</p>
-                  <label className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-[#EAEAEA] hover:border-[#F26B1D] cursor-pointer">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-dark">Disponibilité</p>
+                  <label className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-ink/10 hover:border-brand cursor-pointer">
                     <input
                       type="checkbox"
                       checked={filters.inStockOnly}
                       onChange={(e) => onChange({ ...filters, inStockOnly: e.target.checked })}
-                      className="w-4 h-4 rounded accent-[#F26B1D]"
+                      className="w-4 h-4 rounded accent-brand"
                     />
-                    <span className="text-xs font-semibold text-[#111111]">En stock uniquement (disponible immédiatement)</span>
+                    <span className="text-xs font-semibold text-ink">En stock uniquement (disponible immédiatement)</span>
                   </label>
                 </div>
 
                 {groups.map((group) => (
                   <div key={group.key} className="space-y-2">
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#C2410C]">{group.label}</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-brand-dark">{group.label}</p>
                     <div className="flex flex-wrap gap-2">
                       {group.options.map((opt) => (
                         <button key={opt} onClick={() => toggleAttr(group.key, opt)} className={chip(filters.attrs[group.key] === opt)}>
@@ -211,12 +211,12 @@ export const CategoryFilterSystem: React.FC<CategoryFilterSystemProps> = ({
                 ))}
               </div>
 
-              <div className="p-5 bg-white border-t border-[#EAEAEA] space-y-2">
+              <div className="p-5 bg-white border-t border-ink/10 space-y-2">
                 <button
                   onClick={() => setDrawerOpen(false)}
-                  className="w-full py-3.5 bg-[#111111] hover:bg-[#222222] text-white font-bold text-xs rounded-xl tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3.5 bg-ink hover:bg-black text-white font-bold text-xs rounded-xl tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Check className="w-4 h-4 text-[#F26B1D]" />
+                  <Check className="w-4 h-4 text-brand" />
                   <span>Afficher les résultats ({totalResults})</span>
                 </button>
               </div>

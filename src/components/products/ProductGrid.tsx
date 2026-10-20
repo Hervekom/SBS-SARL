@@ -61,12 +61,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
           <div>
             {subtitle && (
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#C2410C] block mb-1">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-brand-dark block mb-1">
                 {subtitle}
               </span>
             )}
             {title && (
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#111111]">
+              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
                 {title}
               </h2>
             )}
@@ -79,15 +79,15 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 
       {/* Filter and Sort Bar (Labcraft Store style logic) */}
       {showFilters && (
-        <div className="bg-white p-3 sm:p-4 rounded-2xl border border-[#EAEAEA] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-xs">
+        <div className="bg-white p-3 sm:p-4 rounded-2xl border border-ink/10 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-xs">
           {/* Category Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             <button
               onClick={() => setSelectedCategory('all')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 selectedCategory === 'all'
-                  ? 'bg-[#111111] text-[#F26B1D]'
-                  : 'text-neutral-600 hover:text-[#111111] hover:bg-[#F6F6F6]'
+                  ? 'bg-ink text-brand'
+                  : 'text-neutral-600 hover:text-ink hover:bg-[#F4F2EF]'
               }`}
             >
               Tous les articles
@@ -98,8 +98,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                 onClick={() => setSelectedCategory(c.id)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                   selectedCategory === c.id
-                    ? 'bg-[#111111] text-[#F26B1D]'
-                    : 'text-neutral-600 hover:text-[#111111] hover:bg-[#F6F6F6]'
+                    ? 'bg-ink text-brand'
+                    : 'text-neutral-600 hover:text-ink hover:bg-[#F4F2EF]'
                 }`}
               >
                 {c.name}
@@ -115,7 +115,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                 type="checkbox"
                 checked={inStockOnly}
                 onChange={(e) => setInStockOnly(e.target.checked)}
-                className="w-3.5 h-3.5 rounded text-[#F26B1D] focus:ring-[#F26B1D] border-[#F26B1D]"
+                className="w-3.5 h-3.5 rounded text-brand focus:ring-brand border-brand"
               />
               <span>En stock uniquement</span>
             </label>
@@ -128,7 +128,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-[#F6F6F6] border border-[#E2E2E2] rounded-xl text-xs font-medium text-neutral-800 py-1.5 pl-2 pr-6 focus:outline-none focus:border-[#F26B1D] cursor-pointer"
+                className="bg-[#F4F2EF] border border-ink/10 rounded-xl text-xs font-medium text-neutral-800 py-1.5 pl-2 pr-6 focus:outline-none focus:border-brand cursor-pointer"
                 aria-label="Trier les produits"
               >
                 <option value="featured">Pertinence</option>
@@ -149,11 +149,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-dashed border-[#DADADA] p-12 text-center space-y-3">
-          <div className="w-12 h-12 rounded-full bg-[#F6F6F6] text-neutral-400 flex items-center justify-center mx-auto">
+        <div className="bg-white rounded-2xl border border-dashed border-ink/10 p-12 text-center space-y-3">
+          <div className="w-12 h-12 rounded-full bg-[#F4F2EF] text-neutral-400 flex items-center justify-center mx-auto">
             <SearchX className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-[#111111]">Aucun produit trouvé</h3>
+          <h3 className="text-base font-bold text-ink">Aucun produit trouvé</h3>
           <p className="text-xs text-neutral-500 max-w-sm mx-auto">
             Essayez de réinitialiser vos filtres ou de sélectionner un autre rayon.
           </p>
@@ -163,7 +163,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               setInStockOnly(false);
               setSortBy('featured');
             }}
-            className="px-4 py-2 bg-[#111111] text-[#F26B1D] text-xs font-semibold rounded-xl hover:bg-[#222222] transition-colors"
+            className="px-4 py-2 bg-ink text-brand text-xs font-semibold rounded-xl hover:bg-black transition-colors"
           >
             Réinitialiser les filtres
           </button>

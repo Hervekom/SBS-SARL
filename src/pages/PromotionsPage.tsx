@@ -10,17 +10,17 @@ export const PromotionsPage: React.FC = () => {
   const promoProducts = PRODUCTS.filter((p) => p.isPromotion || (p.originalPrice && p.originalPrice > p.price));
 
   return (
-    <div className="py-8 sm:py-12 bg-[#FFFFFF] min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+    <div className="py-8 sm:py-12 bg-porcelain min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
         {/* Banner */}
-        <div className="bg-[#111111] text-[#FFFFFF] rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl border border-[#2B2B2B]">
+        <div className="bg-ink text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl border border-[#2B2B2B]">
           <div className="relative z-10 max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4A017]/20 text-[#D4A017] text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/20 text-gold text-xs font-semibold">
               <Flame className="w-3.5 h-3.5" />
               <span>BONS PLANS SBS</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+            <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-white leading-tight">
               Promotions du moment
             </h1>
 
@@ -29,10 +29,10 @@ export const PromotionsPage: React.FC = () => {
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-4">
-              <div className="bg-[#1C1C1C] border border-[#333333] px-4 py-2.5 rounded-xl flex items-center gap-3">
-                <Tag className="w-4 h-4 text-[#F26B1D]" />
+              <div className="bg-black border border-[#333333] px-4 py-2.5 rounded-xl flex items-center gap-3">
+                <Tag className="w-4 h-4 text-brand" />
                 <span className="text-xs text-neutral-300">
-                  Code additionnel -10% : <strong className="text-[#D4A017] font-mono">SBS10</strong>
+                  Code additionnel -10% : <strong className="text-gold font-mono">SBS10</strong>
                 </span>
               </div>
             </div>

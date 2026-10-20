@@ -17,7 +17,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ className = '', size = 'md
 
   return (
     <span className={`inline-flex items-center gap-2.5 select-none ${className}`}>
-      <span className={`${iconSize} rounded-full bg-white overflow-hidden shrink-0 flex items-center justify-center ${isLight ? 'ring-2 ring-[#D4A017]/60' : 'ring-1 ring-[#EAEAEA]'}`}>
+      <span className={`${iconSize} rounded-full bg-white overflow-hidden shrink-0 flex items-center justify-center ${isLight ? 'ring-1 ring-white/30' : 'ring-1 ring-ink/10'}`}>
         <img
           src="/logo-sbs-icon.png"
           alt="Smart Business Services SARL"
@@ -26,10 +26,10 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ className = '', size = 'md
         />
       </span>
       <span className="flex flex-col leading-none text-left">
-        <span className={`${titleSize} font-extrabold tracking-tight ${isLight ? 'text-white' : 'text-[#111111]'}`}>
-          SBS<span className="text-[#F26B1D]"> SARL</span>
+        <span className={`${titleSize} font-extrabold tracking-tight ${isLight ? 'text-white' : 'text-ink'}`}>
+          SBS<span className="text-brand"> SARL</span>
         </span>
-        <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.22em] mt-1 ${isLight ? 'text-[#D4A017]' : 'text-[#B8860B]'}`}>
+        <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.22em] mt-1 ${isLight ? 'text-gold-light' : 'text-gold'}`}>
           Smart Business Services
         </span>
       </span>

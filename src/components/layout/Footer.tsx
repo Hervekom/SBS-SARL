@@ -8,8 +8,8 @@ export const Footer: React.FC = () => {
   const { navigate } = useShop();
 
   return (
-    <footer className="bg-[#111111] text-white pt-16 pb-12 border-t-4 border-[#F26B1D]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-ink text-white pt-16 pb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#262626]">
           {/* Marque */}
           <div className="lg:col-span-2 space-y-4">
@@ -24,15 +24,15 @@ export const Footer: React.FC = () => {
 
             <div className="pt-2 space-y-2 text-xs text-neutral-400">
               <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-[#F26B1D] shrink-0" />
+                <MapPin className="w-4 h-4 text-brand shrink-0" />
                 <span>Boutique · {SHOP.address}</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-[#F26B1D] shrink-0" />
+                <Clock className="w-4 h-4 text-brand shrink-0" />
                 <span>{SHOP.hours}</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#F26B1D] shrink-0" />
+                <Phone className="w-4 h-4 text-brand shrink-0" />
                 <span>Appel & WhatsApp : {SHOP.phoneDisplay}</span>
               </div>
               <a
@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2.5 hover:text-white transition-colors"
               >
-                <Facebook className="w-4 h-4 text-[#F26B1D] shrink-0" />
+                <Facebook className="w-4 h-4 text-brand shrink-0" />
                 <span>Smart Business Services Sarl sur Facebook</span>
               </a>
             </div>
@@ -49,7 +49,7 @@ export const Footer: React.FC = () => {
 
           {/* Rayons */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4A017]">Nos rayons</h4>
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">Nos rayons</h4>
             <ul className="space-y-2 text-xs text-neutral-400">
               {CATEGORIES.map((c) => (
                 <li key={c.id}>
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
 
           {/* Services */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4A017]">Services & aide</h4>
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">Services & aide</h4>
             <ul className="space-y-2 text-xs text-neutral-400">
               <li>
                 <button onClick={() => navigate('/compte')} className="hover:text-white transition-colors cursor-pointer">
@@ -80,7 +80,7 @@ export const Footer: React.FC = () => {
                   href={whatsappLink('Bonjour SBS SARL, j’ai besoin d’aide.')}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#F26B1D] transition-colors flex items-center gap-1.5"
+                  className="hover:text-brand transition-colors flex items-center gap-1.5"
                 >
                   <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
                   <span>Assistance WhatsApp</span>
@@ -96,7 +96,7 @@ export const Footer: React.FC = () => {
               <li>
                 <button
                   onClick={() => navigate('/admin')}
-                  className="transition-colors cursor-pointer text-[11px] text-neutral-500 hover:text-[#F26B1D] hover:underline"
+                  className="transition-colors cursor-pointer text-[11px] text-neutral-500 hover:text-brand hover:underline"
                 >
                   Espace administrateur
                 </button>
@@ -106,21 +106,21 @@ export const Footer: React.FC = () => {
 
           {/* Paiements */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4A017]">Paiement</h4>
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">Paiement</h4>
             <p className="text-xs text-neutral-400 font-light">
               Payez à la livraison ou par Mobile Money, en toute confiance :
             </p>
             <div className="flex flex-wrap gap-1.5 pt-1">
-              <span className="px-2.5 py-1 bg-[#1F1F1F] text-neutral-300 rounded text-[11px] border border-neutral-800">
+              <span className="px-2.5 py-1 bg-black text-neutral-300 rounded text-[11px] border border-neutral-800">
                 Espèces à la livraison
               </span>
-              <span className="px-2.5 py-1 bg-[#1F1F1F] text-[#F26B1D] rounded text-[11px] font-semibold border border-neutral-800">
+              <span className="px-2.5 py-1 bg-black text-brand rounded text-[11px] font-semibold border border-neutral-800">
                 Orange Money
               </span>
-              <span className="px-2.5 py-1 bg-[#1F1F1F] text-[#FFCC00] rounded text-[11px] font-semibold border border-neutral-800">
+              <span className="px-2.5 py-1 bg-black text-[#FFCC00] rounded text-[11px] font-semibold border border-neutral-800">
                 MTN MoMo
               </span>
-              <span className="px-2.5 py-1 bg-[#1F1F1F] text-neutral-300 rounded text-[11px] border border-neutral-800">
+              <span className="px-2.5 py-1 bg-black text-neutral-300 rounded text-[11px] border border-neutral-800">
                 Visa / Mastercard
               </span>
             </div>
@@ -132,7 +132,7 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-3">
             <span>Douala · Cameroun</span>
             <span className="text-neutral-600">·</span>
-            <span className="text-[#D4A017]">Le bon gadget, au bon prix</span>
+            <span className="text-gold">Le bon gadget, au bon prix</span>
           </div>
         </div>
       </div>

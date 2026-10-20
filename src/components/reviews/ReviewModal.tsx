@@ -54,20 +54,20 @@ export const ReviewModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn text-left">
-      <div className="bg-[#FFFFFF] rounded-3xl border border-[#EAEAEA] shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-porcelain rounded-3xl border border-ink/10 shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
-        <div className="p-5 border-b border-[#EAEAEA] flex items-center justify-between bg-white">
+        <div className="p-5 border-b border-ink/10 flex items-center justify-between bg-white">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#C2410C]">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-brand-dark">
               Avis Client Certifié
             </span>
-            <h3 className="text-base font-bold text-[#111111]">
+            <h3 className="text-base font-bold text-ink">
               Votre expérience chez SBS SARL
             </h3>
           </div>
           <button
             onClick={() => setReviewModalOpen(false)}
-            className="p-1.5 text-neutral-400 hover:text-[#111111] hover:bg-[#F6F6F6] rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-neutral-400 hover:text-ink hover:bg-[#F4F2EF] rounded-lg transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -78,7 +78,7 @@ export const ReviewModal: React.FC = () => {
             <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-200">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h4 className="text-lg font-bold text-[#111111]">Merci pour votre précieux avis !</h4>
+            <h4 className="text-lg font-bold text-ink">Merci pour votre précieux avis !</h4>
             <p className="text-xs text-neutral-500 max-w-xs mx-auto">
               {isSupabaseConfigured ? 'Votre avis a bien été envoyé. Il sera publié après vérification par l’équipe SBS.' : 'Votre avis a été publié en tête de liste et aidera nos futurs clients.'}
             </p>
@@ -87,7 +87,7 @@ export const ReviewModal: React.FC = () => {
           <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4 text-xs">
             {/* Note en étoiles */}
             <div>
-              <label className="font-bold text-[#111111] block mb-1.5">Note globale *</label>
+              <label className="font-bold text-ink block mb-1.5">Note globale *</label>
               <div className="flex items-center gap-1.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -101,13 +101,13 @@ export const ReviewModal: React.FC = () => {
                     <Star
                       className={`w-6 h-6 ${
                         star <= (hoverRating || rating)
-                          ? 'fill-[#F26B1D] text-[#F26B1D]'
+                          ? 'fill-brand text-brand'
                           : 'text-neutral-300 fill-none'
                       }`}
                     />
                   </button>
                 ))}
-                <span className="ml-2 font-mono font-bold text-sm text-[#111111]">
+                <span className="ml-2 font-mono font-bold text-sm text-ink">
                   {rating} / 5
                 </span>
               </div>
@@ -122,7 +122,7 @@ export const ReviewModal: React.FC = () => {
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
                 placeholder="Ex: iPhone 15 Pro Max, Power Bank 20 000 mAh..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
               />
             </div>
 
@@ -137,7 +137,7 @@ export const ReviewModal: React.FC = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Ex: Téléphone conforme, livraison rapide à Akwa"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
               />
             </div>
 
@@ -152,7 +152,7 @@ export const ReviewModal: React.FC = () => {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Partagez votre expérience sur la qualité, la conformité et le service..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D] resize-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand resize-none"
               />
             </div>
 
@@ -163,7 +163,7 @@ export const ReviewModal: React.FC = () => {
               </label>
 
               {photoUrl ? (
-                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-[#EAEAEA] bg-white p-1">
+                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-ink/10 bg-white p-1">
                   <img src={photoUrl} alt="Photo avis" className="w-full h-full object-cover rounded-xl" />
                   <button
                     type="button"
@@ -174,8 +174,8 @@ export const ReviewModal: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <label className="flex items-center justify-center gap-2 p-4 rounded-2xl border border-dashed border-[#DADADA] hover:border-[#F26B1D] bg-white cursor-pointer transition-colors">
-                  <Camera className="w-5 h-5 text-[#F26B1D]" />
+                <label className="flex items-center justify-center gap-2 p-4 rounded-2xl border border-dashed border-ink/10 hover:border-brand bg-white cursor-pointer transition-colors">
+                  <Camera className="w-5 h-5 text-brand" />
                   <span className="text-xs text-neutral-600 font-medium">
                     Sélectionner une photo depuis votre appareil
                   </span>
@@ -198,7 +198,7 @@ export const ReviewModal: React.FC = () => {
                   required
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
                 />
               </div>
 
@@ -209,7 +209,7 @@ export const ReviewModal: React.FC = () => {
                   required
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
                 />
               </div>
             </div>
@@ -217,7 +217,7 @@ export const ReviewModal: React.FC = () => {
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-3.5 bg-[#111111] hover:bg-[#222222] text-[#FFFFFF] font-bold text-xs rounded-xl tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3.5 bg-ink hover:bg-black text-white font-bold text-xs rounded-xl tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Publier mon avis certifié</span>
               </button>

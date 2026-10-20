@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+/* Palette SBS : blanc · orange · or · noir (mise en page éditoriale) */
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --color-ink: #17120E;          /* noir chaud */
+  --color-porcelain: #FFFCF9;    /* blanc cassé */
+  --color-blush: #FFF1E7;        /* teinte orange très claire */
+  --color-brand: #F26B1D;        /* orange SBS */
+  --color-brand-dark: #C2410C;   /* orange foncé (texte sur blanc) */
+  --color-brand-hover: #DD5A10;
+  --color-gold: #C9971C;         /* or */
+  --color-gold-light: #F2D27A;
+}
+
 @layer base {
   :root {
     --color-orange: #F26B1D;
@@ -12,10 +26,18 @@
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #FFFFFF;
-    color: #111111;
-    overflow-x: hidden;
+    font-family: var(--font-sans);
+    background-color: var(--color-porcelain);
+    color: var(--color-ink);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
   }
 
   /* Custom scrollbar for refined luxury feel */

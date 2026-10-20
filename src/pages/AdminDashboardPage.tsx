@@ -194,17 +194,17 @@ export const AdminDashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="py-8 sm:py-12 bg-[#FFFFFF] min-h-screen text-left">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div className="py-8 sm:py-12 bg-porcelain min-h-screen text-left">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
         
         {/* En-tête Admin */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#EAEAEA] pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-ink/10 pb-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111111] text-[#F26B1D] text-[11px] font-bold uppercase tracking-widest mb-1.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink text-brand text-[11px] font-bold uppercase tracking-widest mb-1.5">
               <Compass className="w-3.5 h-3.5" />
               <span>Back-Office d'Administration</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-[#111111]">
+            <h1 className="text-2xl sm:text-4xl font-semibold text-ink">
               Tableau de Bord Commercial
             </h1>
           </div>
@@ -212,15 +212,15 @@ export const AdminDashboardPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/')}
-              className="px-4 py-2.5 rounded-xl border border-[#EAEAEA] hover:border-[#F26B1D] bg-white text-xs font-bold text-[#111111] transition-colors cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2.5 rounded-xl border border-ink/10 hover:border-brand bg-white text-xs font-bold text-ink transition-colors cursor-pointer flex items-center gap-1.5"
             >
               <span>Voir la boutique</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#F26B1D]" />
+              <ArrowRight className="w-3.5 h-3.5 text-brand" />
             </button>
 
             <button
               onClick={handleOpenAddModal}
-              className="px-4 py-2.5 rounded-xl bg-[#111111] hover:bg-[#222222] text-[#F26B1D] font-bold text-xs transition-all shadow-sm flex items-center gap-2 cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-ink hover:bg-black text-brand font-bold text-xs transition-all shadow-sm flex items-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Nouveau Produit</span>
@@ -232,7 +232,7 @@ export const AdminDashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Navigation Latérale */}
-          <div className="lg:col-span-3 bg-white rounded-3xl border border-[#EAEAEA] p-4 sm:p-5 space-y-1.5 shadow-xs">
+          <div className="lg:col-span-3 bg-white rounded-3xl border border-ink/10 p-4 sm:p-5 space-y-1.5 shadow-xs">
             {[
               { id: 'overview', label: 'Vue d’ensemble', icon: LayoutDashboard },
               { id: 'products', label: 'Produits & Stock', icon: Package, badge: products.length },
@@ -249,18 +249,18 @@ export const AdminDashboardPage: React.FC = () => {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`w-full px-4 py-3 rounded-2xl text-xs font-bold flex items-center justify-between transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-[#111111] text-[#F26B1D] shadow-xs'
-                      : 'text-neutral-700 hover:bg-[#F6F6F6] hover:text-[#111111]'
+                      ? 'bg-ink text-brand shadow-xs'
+                      : 'text-neutral-700 hover:bg-[#F4F2EF] hover:text-ink'
                   }`}
                 >
                   <span className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#F26B1D]' : 'text-neutral-500'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-brand' : 'text-neutral-500'}`} />
                     <span>{tab.label}</span>
                   </span>
                   {tab.badge !== undefined && (
                     <span
                       className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                        isActive ? 'bg-[#F26B1D] text-[#111111]' : 'bg-[#F6F6F6] text-neutral-600'
+                        isActive ? 'bg-brand text-ink' : 'bg-[#F4F2EF] text-neutral-600'
                       }`}
                     >
                       {tab.badge}
@@ -272,7 +272,7 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
 
           {/* Panneau Contenu */}
-          <div className="lg:col-span-9 bg-white rounded-3xl border border-[#EAEAEA] p-6 sm:p-8 shadow-xs min-h-[520px]">
+          <div className="lg:col-span-9 bg-white rounded-3xl border border-ink/10 p-6 sm:p-8 shadow-xs min-h-[520px]">
             
             {/* ======================================================== */}
             {/* 1. VUE D'ENSEMBLE (OVERVIEW)                            */}
@@ -280,7 +280,7 @@ export const AdminDashboardPage: React.FC = () => {
             {activeTab === 'overview' && (
               <div className="space-y-8 animate-fadeIn">
                 <div>
-                  <h2 className="text-lg font-bold text-[#111111]">Performances & Chiffres Clés</h2>
+                  <h2 className="text-lg font-semibold text-ink">Performances & Chiffres Clés</h2>
                   <p className="text-xs text-neutral-500 font-light">
                     Indicateurs en temps réel des ventes et du catalogue SBS SARL.
                   </p>
@@ -288,11 +288,11 @@ export const AdminDashboardPage: React.FC = () => {
 
                 {/* Cartes Métriques */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#EAEAEA] space-y-1">
+                  <div className="p-5 rounded-2xl bg-porcelain border border-ink/10 space-y-1">
                     <span className="text-[11px] uppercase font-bold text-neutral-500">
                       Chiffre d’Affaires Total
                     </span>
-                    <p className="text-2xl font-extrabold text-[#111111] font-mono">
+                    <p className="text-2xl font-extrabold text-ink font-mono">
                       {formatPrice(totalRevenue)}
                     </p>
                     <span className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1">
@@ -301,11 +301,11 @@ export const AdminDashboardPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#EAEAEA] space-y-1">
+                  <div className="p-5 rounded-2xl bg-porcelain border border-ink/10 space-y-1">
                     <span className="text-[11px] uppercase font-bold text-neutral-500">
                       Références Actives
                     </span>
-                    <p className="text-2xl font-extrabold text-[#111111] font-mono">
+                    <p className="text-2xl font-extrabold text-ink font-mono">
                       {totalActiveProducts} / {products.length}
                     </p>
                     <span className="text-[10px] text-neutral-500 font-light">
@@ -313,31 +313,31 @@ export const AdminDashboardPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#EAEAEA] space-y-1">
+                  <div className="p-5 rounded-2xl bg-porcelain border border-ink/10 space-y-1">
                     <span className="text-[11px] uppercase font-bold text-neutral-500">
                       Avis Certifiés Clients
                     </span>
-                    <p className="text-2xl font-extrabold text-[#111111] font-mono">
+                    <p className="text-2xl font-extrabold text-ink font-mono">
                       {reviews.length} avis
                     </p>
-                    <span className="text-[10px] text-[#C2410C] font-semibold flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-[#D4A017]" />
+                    <span className="text-[10px] text-brand-dark font-semibold flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-gold" />
                       Note moyenne 4.9/5
                     </span>
                   </div>
                 </div>
 
                 {/* Dernières commandes */}
-                <div className="space-y-4 pt-4 border-t border-[#F0F0F0]">
-                  <h3 className="text-sm font-bold text-[#111111]">Dernières Commandes Reçues</h3>
+                <div className="space-y-4 pt-4 border-t border-ink/5">
+                  <h3 className="text-sm font-bold text-ink">Dernières Commandes Reçues</h3>
                   <div className="space-y-2.5 text-xs">
                     {orders.slice(0, 3).map((o) => (
                       <div
                         key={o.orderId}
-                        className="p-4 rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] flex items-center justify-between"
+                        className="p-4 rounded-xl border border-ink/10 bg-porcelain flex items-center justify-between"
                       >
                         <div>
-                          <p className="font-bold text-[#111111]">#{o.orderId} · {o.customerName}</p>
+                          <p className="font-bold text-ink">#{o.orderId} · {o.customerName}</p>
                           <p className="text-neutral-500">{o.city}, {o.country} · {o.paymentMethod}</p>
                         </div>
                         <div className="text-right">
@@ -360,7 +360,7 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="space-y-6 animate-fadeIn">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-lg font-bold text-[#111111]">Catalogue Produits ({products.length})</h2>
+                    <h2 className="text-lg font-semibold text-ink">Catalogue Produits ({products.length})</h2>
                     <p className="text-xs text-neutral-500 font-light">
                       Ajoutez, modifiez le stock, ajustez les prix ou activez/désactivez des références.
                     </p>
@@ -368,7 +368,7 @@ export const AdminDashboardPage: React.FC = () => {
 
                   <button
                     onClick={handleOpenAddModal}
-                    className="px-4 py-2 bg-[#111111] hover:bg-[#222222] text-[#F26B1D] font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+                    className="px-4 py-2 bg-ink hover:bg-black text-brand font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Ajouter</span>
@@ -384,14 +384,14 @@ export const AdminDashboardPage: React.FC = () => {
                       value={productSearch}
                       onChange={(e) => setProductSearch(e.target.value)}
                       placeholder="Rechercher par nom, marque..."
-                      className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] focus:outline-none focus:border-[#F26B1D]"
+                      className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
                     />
                   </div>
 
                   <select
                     value={selectedCategoryFilter}
                     onChange={(e) => setSelectedCategoryFilter(e.target.value)}
-                    className="px-3 py-2 text-xs rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] focus:outline-none focus:border-[#F26B1D]"
+                    className="px-3 py-2 text-xs rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
                   >
                     <option value="all">Toutes les catégories</option>
                     <option value="smartphones">Téléphones</option>
@@ -402,9 +402,9 @@ export const AdminDashboardPage: React.FC = () => {
                 </div>
 
                 {/* Tableau Produits */}
-                <div className="border border-[#EAEAEA] rounded-2xl overflow-hidden overflow-x-auto">
+                <div className="border border-ink/10 rounded-2xl overflow-hidden overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-[#F6F6F6] border-b border-[#EAEAEA] text-neutral-700 font-bold uppercase tracking-wider text-[10px]">
+                    <thead className="bg-[#F4F2EF] border-b border-ink/10 text-neutral-700 font-bold uppercase tracking-wider text-[10px]">
                       <tr>
                         <th className="p-3">Produit</th>
                         <th className="p-3">Catégorie</th>
@@ -414,17 +414,17 @@ export const AdminDashboardPage: React.FC = () => {
                         <th className="p-3 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#EAEAEA]">
+                    <tbody className="divide-y divide-ink/10">
                       {filteredProducts.map((p) => (
-                        <tr key={p.id} className="hover:bg-[#FFFFFF]/60 transition-colors">
+                        <tr key={p.id} className="hover:bg-porcelain/60 transition-colors">
                           <td className="p-3 flex items-center gap-3">
                             <img
                               src={p.image_url || p.image}
                               alt=""
-                              className="w-10 h-10 object-contain rounded-lg bg-[#F6F6F6] p-1 border border-[#EAEAEA] shrink-0"
+                              className="w-10 h-10 object-contain rounded-lg bg-[#F4F2EF] p-1 border border-ink/10 shrink-0"
                             />
                             <div className="min-w-0 max-w-[200px]">
-                              <p className="font-bold text-[#111111] truncate">{p.name}</p>
+                              <p className="font-bold text-ink truncate">{p.name}</p>
                               <span className="text-[10px] text-neutral-400 font-mono">
                                 Réf: {p.id}
                               </span>
@@ -435,7 +435,7 @@ export const AdminDashboardPage: React.FC = () => {
                             {p.category_id || p.category}
                           </td>
 
-                          <td className="p-3 font-mono font-bold text-[#111111]">
+                          <td className="p-3 font-mono font-bold text-ink">
                             {formatPrice(p.price)}
                             {p.old_price && (
                               <span className="block text-[10px] text-neutral-400 line-through">
@@ -474,7 +474,7 @@ export const AdminDashboardPage: React.FC = () => {
                             <div className="inline-flex items-center gap-1.5">
                               <button
                                 onClick={() => handleOpenEditModal(p)}
-                                className="p-1.5 text-neutral-600 hover:text-[#111111] hover:bg-[#F6F6F6] rounded-lg cursor-pointer"
+                                className="p-1.5 text-neutral-600 hover:text-ink hover:bg-[#F4F2EF] rounded-lg cursor-pointer"
                                 title="Modifier"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
@@ -505,9 +505,9 @@ export const AdminDashboardPage: React.FC = () => {
             {/* ======================================================== */}
             {activeTab === 'homepage' && (
               <form onSubmit={handleSaveHomepage} className="space-y-6 animate-fadeIn">
-                <div className="border-b border-[#EAEAEA] pb-3 flex items-center justify-between">
+                <div className="border-b border-ink/10 pb-3 flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-bold text-[#111111]">Gestion de la Homepage</h2>
+                    <h2 className="text-lg font-semibold text-ink">Gestion de la Homepage</h2>
                     <p className="text-xs text-neutral-500 font-light">
                       Personnalisez les messages d'accueil, le bandeau promo et la mise en avant.
                     </p>
@@ -515,7 +515,7 @@ export const AdminDashboardPage: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-[#111111] hover:bg-[#222222] text-[#F26B1D] font-bold text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-xs"
+                    className="px-4 py-2 bg-ink hover:bg-black text-brand font-bold text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-xs"
                   >
                     <Save className="w-4 h-4" />
                     <span>Sauvegarder</span>
@@ -531,48 +531,48 @@ export const AdminDashboardPage: React.FC = () => {
 
                 <div className="space-y-4 text-xs">
                   <div>
-                    <label className="font-bold text-[#111111] block mb-1">Badge du Hero</label>
+                    <label className="font-bold text-ink block mb-1">Badge du Hero</label>
                     <input
                       type="text"
                       value={homeForm.heroBadge}
                       onChange={(e) => setHomeForm({ ...homeForm, heroBadge: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] focus:outline-none focus:border-[#F26B1D]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
                     />
                   </div>
 
                   <div>
-                    <label className="font-bold text-[#111111] block mb-1">Titre Principal du Hero</label>
+                    <label className="font-bold text-ink block mb-1">Titre Principal du Hero</label>
                     <input
                       type="text"
                       value={homeForm.heroTitle}
                       onChange={(e) => setHomeForm({ ...homeForm, heroTitle: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] focus:outline-none focus:border-[#F26B1D]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
                     />
                   </div>
 
                   <div>
-                    <label className="font-bold text-[#111111] block mb-1">Sous-Titre du Hero</label>
+                    <label className="font-bold text-ink block mb-1">Sous-Titre du Hero</label>
                     <textarea
                       rows={2}
                       value={homeForm.heroSubtitle}
                       onChange={(e) => setHomeForm({ ...homeForm, heroSubtitle: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] focus:outline-none focus:border-[#F26B1D]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                     <div>
-                      <label className="font-bold text-[#111111] block mb-1">Code Promo Actif</label>
+                      <label className="font-bold text-ink block mb-1">Code Promo Actif</label>
                       <input
                         type="text"
                         value={homeForm.promoCode}
                         onChange={(e) => setHomeForm({ ...homeForm, promoCode: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] focus:outline-none focus:border-[#F26B1D] font-mono uppercase"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand font-mono uppercase"
                       />
                     </div>
 
                     <div>
-                      <label className="font-bold text-[#111111] block mb-1">Pourcentage de Remise (%)</label>
+                      <label className="font-bold text-ink block mb-1">Pourcentage de Remise (%)</label>
                       <input
                         type="number"
                         min="1"
@@ -581,7 +581,7 @@ export const AdminDashboardPage: React.FC = () => {
                         onChange={(e) =>
                           setHomeForm({ ...homeForm, promoDiscount: Number(e.target.value) })
                         }
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] focus:outline-none focus:border-[#F26B1D]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-ink/10 bg-porcelain focus:outline-none focus:border-brand"
                       />
                     </div>
                   </div>
@@ -594,8 +594,8 @@ export const AdminDashboardPage: React.FC = () => {
             {/* ======================================================== */}
             {activeTab === 'orders' && (
               <div className="space-y-6 animate-fadeIn">
-                <div className="border-b border-[#EAEAEA] pb-3">
-                  <h2 className="text-lg font-bold text-[#111111]">Gestion des Commandes ({orders.length})</h2>
+                <div className="border-b border-ink/10 pb-3">
+                  <h2 className="text-lg font-semibold text-ink">Gestion des Commandes ({orders.length})</h2>
                   <p className="text-xs text-neutral-500 font-light">
                     Mettez à jour le statut d'acheminement des commandes clients.
                   </p>
@@ -605,11 +605,11 @@ export const AdminDashboardPage: React.FC = () => {
                   {orders.map((o) => (
                     <div
                       key={o.orderId}
-                      className="p-5 rounded-2xl border border-[#EAEAEA] bg-[#FFFFFF] space-y-3 text-xs"
+                      className="p-5 rounded-2xl border border-ink/10 bg-porcelain space-y-3 text-xs"
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#EAEAEA]">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-ink/10">
                         <div>
-                          <span className="font-bold text-[#111111] text-sm">#{o.orderId}</span>
+                          <span className="font-bold text-ink text-sm">#{o.orderId}</span>
                           <p className="text-neutral-500">{o.customerName} · {o.phone}</p>
                         </div>
 
@@ -618,7 +618,7 @@ export const AdminDashboardPage: React.FC = () => {
                           <select
                             value={o.status}
                             onChange={(e) => updateOrderStatus(o.orderId, e.target.value as any)}
-                            className="px-3 py-1.5 rounded-xl border border-[#EAEAEA] bg-white font-semibold text-xs text-[#111111] focus:outline-none focus:border-[#F26B1D] cursor-pointer"
+                            className="px-3 py-1.5 rounded-xl border border-ink/10 bg-white font-semibold text-xs text-ink focus:outline-none focus:border-brand cursor-pointer"
                           >
                             <option value="En préparation">En préparation</option>
                             <option value="En transit">En transit</option>
@@ -629,12 +629,12 @@ export const AdminDashboardPage: React.FC = () => {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-neutral-600">
                         <div>
-                          <p className="font-semibold text-[#111111]">Adresse :</p>
+                          <p className="font-semibold text-ink">Adresse :</p>
                           <p>{o.address}, {o.city} ({o.country})</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-[#111111]">Montant net dû :</p>
-                          <p className="font-mono font-extrabold text-sm text-[#111111]">
+                          <p className="font-semibold text-ink">Montant net dû :</p>
+                          <p className="font-mono font-extrabold text-sm text-ink">
                             {formatPrice(o.totalAmount)}
                           </p>
                         </div>
@@ -650,8 +650,8 @@ export const AdminDashboardPage: React.FC = () => {
             {/* ======================================================== */}
             {activeTab === 'reviews' && (
               <div className="space-y-6 animate-fadeIn">
-                <div className="border-b border-[#EAEAEA] pb-3">
-                  <h2 className="text-lg font-bold text-[#111111]">Modération des Avis Clients ({reviews.length})</h2>
+                <div className="border-b border-ink/10 pb-3">
+                  <h2 className="text-lg font-semibold text-ink">Modération des Avis Clients ({reviews.length})</h2>
                   <p className="text-xs text-neutral-500 font-light">
                     Visualisez les avis déposés par vos clients avec photos de déballage.
                   </p>
@@ -661,22 +661,22 @@ export const AdminDashboardPage: React.FC = () => {
                   {reviews.map((r) => (
                     <div
                       key={r.id}
-                      className="p-5 rounded-2xl border border-[#EAEAEA] bg-[#FFFFFF] space-y-2 text-xs"
+                      className="p-5 rounded-2xl border border-ink/10 bg-porcelain space-y-2 text-xs"
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-bold text-[#111111]">{r.author}</span>
+                          <span className="font-bold text-ink">{r.author}</span>
                           <span className="text-neutral-400"> · {r.location}</span>
                         </div>
-                        <div className="flex text-[#D4A017]">
+                        <div className="flex text-gold">
                           {[...Array(r.rating)].map((_, i) => (
-                            <Star key={i} className="w-3.5 h-3.5 fill-[#D4A017]" />
+                            <Star key={i} className="w-3.5 h-3.5 fill-gold" />
                           ))}
                         </div>
                       </div>
 
-                      <p className="font-semibold text-[#C2410C]">Produit : {r.productName}</p>
-                      <p className="font-bold text-[#111111]">"{r.title}"</p>
+                      <p className="font-semibold text-brand-dark">Produit : {r.productName}</p>
+                      <p className="font-bold text-ink">"{r.title}"</p>
                       <p className="text-neutral-600 font-light">{r.content}</p>
 
                       {r.photo_url && (
@@ -684,7 +684,7 @@ export const AdminDashboardPage: React.FC = () => {
                           <img
                             src={r.photo_url}
                             alt=""
-                            className="w-16 h-16 object-cover rounded-xl border border-[#EAEAEA]"
+                            className="w-16 h-16 object-cover rounded-xl border border-ink/10"
                           />
                         </div>
                       )}
@@ -699,8 +699,8 @@ export const AdminDashboardPage: React.FC = () => {
             {/* ======================================================== */}
             {activeTab === 'categories' && (
               <div className="space-y-6 animate-fadeIn">
-                <div className="border-b border-[#EAEAEA] pb-3">
-                  <h2 className="text-lg font-bold text-[#111111]">Rayons SBS SARL</h2>
+                <div className="border-b border-ink/10 pb-3">
+                  <h2 className="text-lg font-semibold text-ink">Rayons SBS SARL</h2>
                   <p className="text-xs text-neutral-500 font-light">
                     Les 3 départements signatures configurés sur la boutique.
                   </p>
@@ -710,13 +710,13 @@ export const AdminDashboardPage: React.FC = () => {
                   {CATEGORIES.map((c) => (
                     <div
                       key={c.id}
-                      className="p-5 rounded-2xl border border-[#EAEAEA] bg-[#FFFFFF] space-y-3 text-xs"
+                      className="p-5 rounded-2xl border border-ink/10 bg-porcelain space-y-3 text-xs"
                     >
                       <div className="aspect-video rounded-xl overflow-hidden bg-neutral-900">
                         <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
                       </div>
-                      <span className="font-mono text-[#F26B1D] font-bold">{c.index}</span>
-                      <h3 className="font-bold text-sm text-[#111111]">{c.name}</h3>
+                      <span className="font-mono text-brand font-bold">{c.index}</span>
+                      <h3 className="font-bold text-sm text-ink">{c.name}</h3>
                       <p className="text-neutral-500 text-[11px] font-light leading-relaxed">
                         {c.headline}
                       </p>
@@ -736,14 +736,14 @@ export const AdminDashboardPage: React.FC = () => {
       {/* ======================================================== */}
       {isProductModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-[#FFFFFF] rounded-3xl border border-[#EAEAEA] shadow-2xl max-w-xl w-full max-h-[92vh] flex flex-col overflow-hidden">
-            <div className="p-5 border-b border-[#EAEAEA] flex items-center justify-between bg-white">
-              <h3 className="text-sm font-bold text-[#111111]">
+          <div className="bg-porcelain rounded-3xl border border-ink/10 shadow-2xl max-w-xl w-full max-h-[92vh] flex flex-col overflow-hidden">
+            <div className="p-5 border-b border-ink/10 flex items-center justify-between bg-white">
+              <h3 className="text-sm font-bold text-ink">
                 {editingProductId ? 'Modifier le Produit' : 'Ajouter un Nouveau Produit'}
               </h3>
               <button
                 onClick={() => setIsProductModalOpen(false)}
-                className="p-1.5 text-neutral-400 hover:text-[#111111] rounded-lg"
+                className="p-1.5 text-neutral-400 hover:text-ink rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -751,26 +751,26 @@ export const AdminDashboardPage: React.FC = () => {
 
             <form onSubmit={handleSaveProduct} className="p-6 overflow-y-auto space-y-4 text-xs">
               <div>
-                <label className="font-bold text-[#111111] block mb-1">Nom du produit *</label>
+                <label className="font-bold text-ink block mb-1">Nom du produit *</label>
                 <input
                   type="text"
                   required
                   value={productForm.name || ''}
                   onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
                   placeholder="Ex: Samsung Galaxy A35 128 Go"
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-bold text-[#111111] block mb-1">Catégorie *</label>
+                  <label className="font-bold text-ink block mb-1">Catégorie *</label>
                   <select
                     value={productForm.category_id || 'smartphones'}
                     onChange={(e) =>
                       setProductForm({ ...productForm, category_id: e.target.value as CategoryId })
                     }
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
                   >
                     <option value="smartphones">Téléphones</option>
                     <option value="protection">Pochettes & Verres</option>
@@ -780,20 +780,20 @@ export const AdminDashboardPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="font-bold text-[#111111] block mb-1">Marque</label>
+                  <label className="font-bold text-ink block mb-1">Marque</label>
                   <input
                     type="text"
                     value={productForm.brand || ''}
                     onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
                     placeholder="Ex: Apple, LG, Ninja..."
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="font-bold text-[#111111] block mb-1">Prix Fcfa *</label>
+                  <label className="font-bold text-ink block mb-1">Prix Fcfa *</label>
                   <input
                     type="number"
                     required
@@ -802,12 +802,12 @@ export const AdminDashboardPage: React.FC = () => {
                     onChange={(e) =>
                       setProductForm({ ...productForm, price: Number(e.target.value) })
                     }
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D] font-mono"
+                    className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="font-bold text-[#111111] block mb-1">Ancien Prix</label>
+                  <label className="font-bold text-ink block mb-1">Ancien Prix</label>
                   <input
                     type="number"
                     min="0"
@@ -815,12 +815,12 @@ export const AdminDashboardPage: React.FC = () => {
                     onChange={(e) =>
                       setProductForm({ ...productForm, old_price: Number(e.target.value) })
                     }
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D] font-mono"
+                    className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="font-bold text-[#111111] block mb-1">Stock Physique *</label>
+                  <label className="font-bold text-ink block mb-1">Stock Physique *</label>
                   <input
                     type="number"
                     min="0"
@@ -828,40 +828,40 @@ export const AdminDashboardPage: React.FC = () => {
                     onChange={(e) =>
                       setProductForm({ ...productForm, stock: Number(e.target.value) })
                     }
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D] font-mono"
+                    className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="font-bold text-[#111111] block mb-1">Badge d'état</label>
+                <label className="font-bold text-ink block mb-1">Badge d'état</label>
                 <input
                   type="text"
                   value={productForm.badge || ''}
                   onChange={(e) => setProductForm({ ...productForm, badge: e.target.value })}
                   placeholder="Ex: Nouveau, Best Seller, -20%..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-[#111111] block mb-1">URL de l'image principale</label>
+                <label className="font-bold text-ink block mb-1">URL de l'image principale</label>
                 <input
                   type="url"
                   value={productForm.image_url || ''}
                   onChange={(e) => setProductForm({ ...productForm, image_url: e.target.value })}
                   placeholder="https://..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-[#111111] block mb-1">Description</label>
+                <label className="font-bold text-ink block mb-1">Description</label>
                 <textarea
                   rows={3}
                   value={productForm.description || ''}
                   onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#EAEAEA] bg-white focus:outline-none focus:border-[#F26B1D] resize-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-ink/10 bg-white focus:outline-none focus:border-brand resize-none"
                 />
               </div>
 
@@ -869,13 +869,13 @@ export const AdminDashboardPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsProductModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-neutral-600 hover:text-[#111111] cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-neutral-600 hover:text-ink cursor-pointer"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[#111111] hover:bg-[#222222] text-[#F26B1D] font-bold rounded-xl cursor-pointer shadow-xs"
+                  className="px-5 py-2.5 bg-ink hover:bg-black text-brand font-bold rounded-xl cursor-pointer shadow-xs"
                 >
                   {editingProductId ? 'Enregistrer les modifications' : 'Créer le produit'}
                 </button>
